@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اكادمية زد | الملخصات</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="summaries.css" />
+    <link rel="icon" type="image/png" href="/img/logotop.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-content">
+        <a href="index.html" class="logo-link">
+          <img src="/img/logo.png" alt="شعار Royal Store" class="logo" />
+        </a>
+
+        <nav class="nav-links">
+          <a href="index.html" class="nav-item">الرئيسية</a>
+          <a href="courses.html" class="nav-item">الدورات</a>
+          <a href="summaries.html" class="nav-item active">الملخصات</a>
+          <a href="store.html" class="nav-item">المتجر</a>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="user-icon-container" data-tooltip="تسجيل الدخول">
+            <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
+          </div>
+
+          <a href="store.html" class="cta-button">ابدأ الآن</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero summaries-hero">
+        <div class="hero-text-content">
+          <h1>
+            ملخصات ومراجعات لجميع المواد <i class="fas fa-book-reader"></i>
+          </h1>
+          <p>
+            ابحث واختر ورقة العمل المناسبة لصفك ومادتك ودرسك. تغطية شاملة لجميع
+            الفترات.
+          </p>
+          <div class="search-container">
+            <div class="search-bar">
+              <input
+                type="text"
+                id="summarySearchInput"
+                placeholder="ابحث مباشرة: (مثال: رياضيات الفصل 3)"
+              />
+              <button class="search-btn">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="main-content-section">
+        <div class="summaries-layout-container">
+          <div class="selection-bar">
+            <div class="select-group">
+              <label for="gradeSelect"
+                ><i class="fas fa-graduation-cap"></i> الصف الدراسي:</label
+              >
+              <select id="gradeSelect">
+                <option value="">اختر الصف...</option>
+                <option value="grade-1">الصف الأول الثانوي</option>
+                <option value="grade-2">الصف الثاني الثانوي</option>
+                <option value="grade-3">الصف الثالث الثانوي</option>
+              </select>
+            </div>
+
+            <div class="select-group">
+              <label for="subjectSelect"
+                ><i class="fas fa-flask"></i> المادة:</label
+              >
+              <select id="subjectSelect" disabled>
+                <option value="">اختر المادة...</option>
+              </select>
+            </div>
+
+            <div class="select-group">
+              <label for="lessonSelect"
+                ><i class="fas fa-chalkboard-teacher"></i> الدرس/الوحدة:</label
+              >
+              <select id="lessonSelect" disabled>
+                <option value="">اختر الدرس...</option>
+              </select>
+            </div>
+
+            <button class="apply-filter-btn" id="applyFilterBtn" disabled>
+              تصفية النتائج
+            </button>
+          </div>
+
+          <div class="summaries-grid-area">
+            <h2 class="grid-title">
+              <i class="fas fa-list-ul"></i>
+              ورقة عمل متاحة: <span id="summaryCount">4</span>
+            </h2>
+
+            <div class="summary-grid" id="summariesGrid">
+              <div
+                class="summary-card fade-in-up"
+                data-grade="grade-1"
+                data-subject="math"
+                data-lesson="lesson-1-1"
+                data-unit="الوحدة 1"
+                data-teacher="أ. محمد"
+              >
+                <div class="card-inner-a4">
+                  <div class="a4-header math-bg">
+                    <i class="fas fa-square-root-alt"></i>
+                    <div class="title-details">
+                      <h3 class="summary-title">
+                        ورقة عمل: الدوال المثلثية (الفصل الأول)
+                      </h3>
+                      <p class="summary-meta-a4">
+                        الصف الأول الثانوي | الرياضيات - الوحدة 1
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="a4-body">
+                    <p class="summary-description">
+                      ملخص شامل لأول درسين في الوحدة الأولى. يشمل التعريفات
+                      الأساسية والأمثلة التطبيقية.
+                    </p>
+                    <div class="meta-interaction">
+                      <span class="meta-item"
+                        ><i class="fas fa-clipboard-list"></i> **الدرس:** الدوال
+                        المثلثية</span
+                      >
+                      <span class="meta-item"
+                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
+                        المعلم</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="a4-footer">
+                    <div class="interaction-stats">
+                      <span class="stat-item"
+                        ><i class="fas fa-eye"></i> 1,234 معاينة</span
+                      >
+                      <span class="stat-item"
+                        ><i class="fas fa-download"></i> 589 تنزيل</span
+                      >
+                    </div>
+                    <div class="action-buttons">
+                      <a href="#preview" class="preview-btn"
+                        ><i class="fas fa-eye"></i> معاينة</a
+                      >
+                      <a href="#download" class="download-btn"
+                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="summary-card fade-in-up"
+                style="animation-delay: 0.1s"
+                data-grade="grade-2"
+                data-subject="chemistry"
+                data-lesson="lesson-2-2"
+                data-unit="الوحدة 2"
+                data-teacher="أ. خالد"
+              >
+                <div class="card-inner-a4">
+                  <div class="a4-header chemistry-bg">
+                    <i class="fas fa-vial"></i>
+                    <div class="title-details">
+                      <h3 class="summary-title">
+                        ورقة عمل: أساسيات الهيدروكربونات العضوية
+                      </h3>
+                      <p class="summary-meta-a4">
+                        الصف الثاني الثانوي | الكيمياء - الوحدة 2
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="a4-body">
+                    <p class="summary-description">
+                      ورقة عمل مكثفة تغطي تسمية الهيدروكربونات وتصنيفها. مثالية
+                      للمراجعة النهائية للوحدة.
+                    </p>
+                    <div class="meta-interaction">
+                      <span class="meta-item"
+                        ><i class="fas fa-clipboard-list"></i> **الدرس:**
+                        الهيدروكربونات</span
+                      >
+                      <span class="meta-item"
+                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
+                        المعلم</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="a4-footer">
+                    <div class="interaction-stats">
+                      <span class="stat-item"
+                        ><i class="fas fa-eye"></i> 987 معاينة</span
+                      >
+                      <span class="stat-item"
+                        ><i class="fas fa-download"></i> 412 تنزيل</span
+                      >
+                    </div>
+                    <div class="action-buttons">
+                      <a href="#preview" class="preview-btn"
+                        ><i class="fas fa-eye"></i> معاينة</a
+                      >
+                      <a href="#download" class="download-btn"
+                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="summary-card fade-in-up"
+                style="animation-delay: 0.2s"
+                data-grade="grade-3"
+                data-subject="english"
+                data-lesson="lesson-3-3"
+                data-unit="Unit 3"
+                data-teacher="أ. سارة"
+              >
+                <div class="card-inner-a4">
+                  <div class="a4-header english-bg">
+                    <i class="fas fa-language"></i>
+                    <div class="title-details">
+                      <h3 class="summary-title">
+                        ورقة عمل: Grammar Focus (الوحدات 3 & 4)
+                      </h3>
+                      <p class="summary-meta-a4">
+                        الصف الثالث الثانوي | الإنجليزية - Unit 3
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="a4-body">
+                    <p class="summary-description">
+                      تدريبات مكثفة على قواعد الفصل الثالث والرابع، مع التركيز
+                      على التراكيب الشائعة.
+                    </p>
+                    <div class="meta-interaction">
+                      <span class="meta-item"
+                        ><i class="fas fa-clipboard-list"></i> **الدرس:** قواعد
+                        الوحدة 3</span
+                      >
+                      <span class="meta-item"
+                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
+                        المعلم</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="a4-footer">
+                    <div class="interaction-stats">
+                      <span class="stat-item"
+                        ><i class="fas fa-eye"></i> 1,500 معاينة</span
+                      >
+                      <span class="stat-item"
+                        ><i class="fas fa-download"></i> 650 تنزيل</span
+                      >
+                    </div>
+                    <div class="action-buttons">
+                      <a href="#preview" class="preview-btn"
+                        ><i class="fas fa-eye"></i> معاينة</a
+                      >
+                      <a href="#download" class="download-btn"
+                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="summary-card fade-in-up"
+                style="animation-delay: 0.3s"
+                data-grade="grade-3"
+                data-subject="critical"
+                data-lesson="lesson-3-4"
+                data-unit="الوحدة 1"
+                data-teacher="أ. زينب"
+              >
+                <div class="card-inner-a4">
+                  <div class="a4-header critical-bg">
+                    <i class="fas fa-brain"></i>
+                    <div class="title-details">
+                      <h3 class="summary-title">
+                        ملخص: مهارة الاستدلال والقياس المنطقي
+                      </h3>
+                      <p class="summary-meta-a4">
+                        الصف الثالث الثانوي | التفكير الناقد - الوحدة 1
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="a4-body">
+                    <p class="summary-description">
+                      تغطية مبسطة لمهارة القياس المنطقي، يشمل الأمثلة والتمارين
+                      لتعميق الفهم.
+                    </p>
+                    <div class="meta-interaction">
+                      <span class="meta-item"
+                        ><i class="fas fa-clipboard-list"></i> **الدرس:** القياس
+                        المنطقي</span
+                      >
+                      <span class="meta-item"
+                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
+                        المعلم</span
+                      >
+                    </div>
+                  </div>
+
+                  <div class="a4-footer">
+                    <div class="interaction-stats">
+                      <span class="stat-item"
+                        ><i class="fas fa-eye"></i> 700 معاينة</span
+                      >
+                      <span class="stat-item"
+                        ><i class="fas fa-download"></i> 350 تنزيل</span
+                      >
+                    </div>
+                    <div class="action-buttons">
+                      <a href="#preview" class="preview-btn"
+                        ><i class="fas fa-eye"></i> معاينة</a
+                      >
+                      <a href="#download" class="download-btn"
+                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="noResults"
+                class="no-results-message"
+                style="display: none"
+              >
+                <i class="fas fa-search-minus fa-3x"></i>
+                <p>
+                  عذراً، لم يتم العثور على أوراق عمل مطابقة لاختيارك أو بحثك.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="/img/logo.png" alt="شعار Royal Store الأبيض" class="logo" />
+        </div>
+
+        <div class="footer-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="courses.html">الدورات</a>
+          <a href="summaries.html">الملخصات</a>
+          <a href="store.html">المتجر</a>
+        </div>
+
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="copyright">
+        &copy;جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
+      </div>
+    </footer>
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ الانتقال...</p>
+    </div>
+    <script src="index.js"></script>
+    <script src="summaries.js"></script>
+  </body>
+</html>

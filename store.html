@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اكادمية زد | المتجر</title>
+    <title></title>
+
+    <link rel="icon" type="image/png" href="/img/logotop.png" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="store.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="loading-screen" class="loading-screen is-active">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ الانتقال إلى المتجر...</p>
+    </div>
+
+    <header class="navbar">
+      <div class="navbar-content">
+        <a
+          href="index.html"
+          class="logo-link fade-in-up"
+          style="animation-delay: 0.1s"
+        >
+          <img src="/img/logo.png" alt="شعار Royal Store" class="logo" />
+        </a>
+
+        <nav class="nav-links fade-in-up" style="animation-delay: 0.2s">
+          <a href="index.html" class="nav-item">الرئيسية</a>
+          <a href="courses.html" class="nav-item">الدورات</a>
+          <a href="summaries.html" class="nav-item">الملخصات</a>
+          <a href="store.html" class="nav-item active">المتجر</a>
+        </nav>
+
+        <div class="nav-actions fade-in-up" style="animation-delay: 0.3s">
+          <a
+            href="#"
+            class="user-icon-container"
+            data-tooltip="تسجيل الدخول"
+            id="openLoginModal"
+          >
+            <i class="fas fa-user-circle user-icon"></i>
+          </a>
+
+          <a href="store.html" class="cta-button">ابدأ الآن</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="store-content-section">
+        <h2 class="area-title fade-in-up" style="animation-delay: 0.5s">
+          🌟 خدماتنا المميزة لتطوير الأعمال 🌟
+        </h2>
+
+        <div
+          class="search-bar-container fade-in-up"
+          style="animation-delay: 0.6s"
+        >
+          <input
+            type="text"
+            id="productSearchInput"
+            placeholder="ابحث عن خدمة (مثل تصميم موقع شخصي)..."
+          />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <div class="product-card fade-in-up" data-product-id="1">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="1">
+                <img
+                  src="/img/store-product-1-1.jpg"
+                  alt="صورة خدمة موقع شخصي 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-1-2.jpg"
+                  alt="صورة خدمة موقع شخصي 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-1-3.jpg"
+                  alt="صورة خدمة موقع شخصي 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-1-4.jpg"
+                  alt="صورة خدمة موقع شخصي 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag">الأكثر طلباً</span>
+              <button
+                class="wishlist-btn"
+                data-product-id="1"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="1">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="1">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تصميم مواقع</p>
+              <h3 class="product-name">خدمة تصميم موقع شخصي (Portfolio)</h3>
+              <p class="product-description">
+                تصميم موقع احترافي يعرض مهاراتك وخبراتك، متجاوب مع جميع الشاشات.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> تصميم مخصص لمرة واحدة
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> صفحة واحدة/مقالات (Blog)
+                </li>
+                <li><i class="fas fa-check-circle"></i> دعم فني شهر مجاني</li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">1,500</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">999</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(45 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 7 أيام عمل
+              </div>
+
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="1"
+                    data-product-name="موقع شخصي (Portfolio)"
+                    data-product-price="999"
+                  >
+                    <a
+                      href="payment.html?id=1"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="2">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="2">
+                <img
+                  src="/img/store-product-2-1.jpg"
+                  alt="صورة خدمة موقع تعليمي 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-2-2.jpg"
+                  alt="صورة خدمة موقع تعليمي 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-2-3.jpg"
+                  alt="صورة خدمة موقع تعليمي 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-2-4.jpg"
+                  alt="صورة خدمة موقع تعليمي 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag">باقة المطور</span>
+              <button
+                class="wishlist-btn"
+                data-product-id="2"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="2">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="2">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">منصات تعليمية</p>
+              <h3 class="product-name">تطوير موقع أكاديمية تعليمية (LMS)</h3>
+              <p class="product-description">
+                إنشاء منصة تعليمية متكاملة لبيع الدورات وإدارة الطلاب
+                واختباراتهم.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> نظام إدارة متكامل (LMS)
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> بوابة دفع وإصدار شهادات
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تدريب على الاستخدام لمدة
+                  شهر
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">7,000</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">5,500</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(22 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 30 يوم عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="2"
+                    data-product-name="أكاديمية تعليمية (LMS)"
+                    data-product-price="5500"
+                  >
+                    <a
+                      href="payment.html?id=2"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="3">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="3">
+                <img
+                  src="/img/store-product-3-1.jpg"
+                  alt="صورة خدمة متجر إلكتروني 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-3-2.jpg"
+                  alt="صورة خدمة متجر إلكتروني 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-3-3.jpg"
+                  alt="صورة خدمة متجر إلكتروني 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-3-4.jpg"
+                  alt="صورة خدمة متجر إلكتروني 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag" style="background-color: #28a745"
+                >الأفضل مبيعاً</span
+              >
+              <button
+                class="wishlist-btn"
+                data-product-id="3"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="3">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="3">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تجارة إلكترونية</p>
+              <h3 class="product-name">
+                إنشاء متجر إلكتروني احترافي (WooCommerce)
+              </h3>
+              <p class="product-description">
+                متجر متكامل، جاهز لقبول المدفوعات والشحن المحلي والدولي.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> تصميم مخصص و 50 منتج
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> ربط بجميع شركات الشحن
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تحسين محركات البحث (SEO)
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">4,000</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">2,800</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(98 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 15 يوم عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="3"
+                    data-product-name="متجر إلكتروني احترافي"
+                    data-product-price="2800"
+                  >
+                    <a
+                      href="payment.html?id=3"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="4">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="4">
+                <img
+                  src="/img/store-product-4-1.jpg"
+                  alt="صورة خدمة واجهة تسجيل دخول 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-4-2.jpg"
+                  alt="صورة خدمة واجهة تسجيل دخول 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-4-3.jpg"
+                  alt="صورة خدمة واجهة تسجيل دخول 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-4-4.jpg"
+                  alt="صورة خدمة واجهة تسجيل دخول 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag" style="background-color: #ff0000"
+                >عرض محدود</span
+              >
+              <button
+                class="wishlist-btn"
+                data-product-id="4"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="4">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="4">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تصميم واجهات (UI/UX)</p>
+              <h3 class="product-name">
+                تصميم واجهة تسجيل دخول/إنشاء حساب بأنماط مختلفة
+              </h3>
+              <p class="product-description">
+                تصميم 5 واجهات مختلفة وجذابة (مودال، صفحة كاملة، جانبي) وتسليم
+                ملفات Figma.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> 5 أنماط تصميم مختلفة
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تسليم ملفات Figma & Sketch
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> دعم لأنظمة Dark/Light Mode
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">1,200</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">850</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★☆</span>
+                <span class="review-count">(12 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 5 أيام عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="4"
+                    data-product-name="تصميم واجهة تسجيل دخول"
+                    data-product-price="850"
+                  >
+                    <a
+                      href="payment.html?id=4"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="5">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="5">
+                <img
+                  src="/img/store-product-5-1.jpg"
+                  alt="صورة موقع فاخر 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-5-2.jpg"
+                  alt="صورة موقع فاخر 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-5-3.jpg"
+                  alt="صورة موقع فاخر 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-5-4.jpg"
+                  alt="صورة موقع فاخر 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag">حصري للشركات</span>
+              <button
+                class="wishlist-btn"
+                data-product-id="5"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="5">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="5">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تصميم مواقع</p>
+              <h3 class="product-name">
+                بناء موقع فاخر (Luxury Design) لشركة ناشئة
+              </h3>
+              <p class="product-description">
+                تصميم موقع يعتمد على المينيمالية والحركات المتقدمة (Motion
+                Graphics) ليناسب الهوية الفاخرة.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> تصميم 6-8 صفحات مخصصة
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> 30 ثانية Motion Graphics
+                  في الصفحة الرئيسية
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> ضمان 3 أشهر على الكود
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">8,000</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">6,500</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(10 عملاء)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 25 يوم عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="5"
+                    data-product-name="موقع فاخر (Luxury Design)"
+                    data-product-price="6500"
+                  >
+                    <a
+                      href="payment.html?id=5"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="6">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="6">
+                <img
+                  src="/img/check.png"
+                  alt="صورة خدمة موقع تعريفي 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-6-2.jpg"
+                  alt="صورة خدمة موقع تعريفي 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-6-3.jpg"
+                  alt="صورة خدمة موقع تعريفي 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-6-4.jpg"
+                  alt="صورة خدمة موقع تعريفي 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag" style="background-color: #00bcd4"
+                >عرض جديد</span
+              >
+              <button
+                class="wishlist-btn"
+                data-product-id="6"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="6">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="6">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تصميم مواقع</p>
+              <h3 class="product-name">تصميم موقع تعريفي لشركة (5-7 صفحات)</h3>
+              <p class="product-description">
+                تصميم احترافي يعكس هوية شركتك، ويشمل معرض أعمال ونموذج اتصال
+                متقدم.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> تصميم 5-7 صفحات مخصصة
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تحسين سرعة وأمان الموقع
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تسليم ملفات المشروع
+                  (Source Code)
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">3,200</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">2,500</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(30 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 10 أيام عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="6"
+                    data-product-name="موقع تعريفي لشركة"
+                    data-product-price="2500"
+                  >
+                    <a
+                      href="payment.html?id=6"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="7">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="7">
+                <img
+                  src="/img/store-product-7-1.jpg"
+                  alt="صورة مدونة ألعاب 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-7-2.jpg"
+                  alt="صورة مدونة ألعاب 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-7-3.jpg"
+                  alt="صورة مدونة ألعاب 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-7-4.jpg"
+                  alt="صورة مدونة ألعاب 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag" style="background-color: #f7931e"
+                >عشاق الألعاب</span
+              >
+              <button
+                class="wishlist-btn"
+                data-product-id="7"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="7">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="7">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تطبيقات ومدونات</p>
+              <h3 class="product-name">
+                تطوير منصة مدونات ألعاب متخصصة (Gaming Blog)
+              </h3>
+              <p class="product-description">
+                منصة ووردبريس متخصصة وسريعة، مهيأة لعرض المراجعات والأخبار
+                والأدلة المصورة للألعاب.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> منصة ووردبريس متخصصة
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> دعم لملفات الفيديو والبث
+                  المباشر
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> تحسين سرعة الأداء
+                  للإعلانات
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">1,800</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">1,200</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(18 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 8 أيام عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="7"
+                    data-product-name="منصة مدونات ألعاب"
+                    data-product-price="1200"
+                  >
+                    <a
+                      href="payment.html?id=7"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card fade-in-up" data-product-id="8">
+            <div class="card-image-box">
+              <div class="product-image-slider" data-card-id="8">
+                <img
+                  src="/img/store-product-8-1.jpg"
+                  alt="صورة خدمة موقع عقاري 1"
+                  class="product-img active"
+                />
+                <img
+                  src="/img/store-product-8-2.jpg"
+                  alt="صورة خدمة موقع عقاري 2"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-8-3.jpg"
+                  alt="صورة خدمة موقع عقاري 3"
+                  class="product-img"
+                />
+                <img
+                  src="/img/store-product-8-4.jpg"
+                  alt="صورة خدمة موقع عقاري 4"
+                  class="product-img"
+                />
+              </div>
+              <span class="rare-product-tag" style="background-color: #007bff"
+                >للمؤسسات</span
+              >
+              <button
+                class="wishlist-btn"
+                data-product-id="8"
+                data-is-fav="false"
+              >
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="prev-btn" data-card-id="8">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <button class="next-btn" data-card-id="8">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </div>
+            <div class="card-content">
+              <p class="text-xs text-gray-500 mb-2">تطبيقات عقارية</p>
+              <h3 class="product-name">
+                تطوير منصة عقارية شاملة (عرض العقارات)
+              </h3>
+              <p class="product-description">
+                منصة متكاملة لعرض العقارات، مع نظام بحث متقدم وخرائط تفاعلية.
+              </p>
+
+              <ul class="feature-list">
+                <li>
+                  <i class="fas fa-check-circle"></i> دعم لخاصية الخرائط (GPS)
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> نظام اشتراكات للمعلنين
+                </li>
+                <li>
+                  <i class="fas fa-check-circle"></i> قابل للتوسع مستقبلاً
+                  لتطبيق موبايل
+                </li>
+              </ul>
+
+              <div class="pricing-box">
+                <span class="price-old">10,000</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-new">7,500</span>
+                <span class="price-currency">ر.س</span>
+              </div>
+
+              <div class="review-section">
+                <span class="rating-star">★★★★★</span>
+                <span class="review-count">(15 عميل)</span>
+              </div>
+
+              <div class="availability">
+                <i class="fas fa-hourglass-half"></i> مدة التنفيذ: 40 يوم عمل
+              </div>
+              <div class="card-actions">
+                <div class="container-blob">
+                  <div
+                    class="inner-blob"
+                    data-product-id="8"
+                    data-product-name="منصة عقارية شاملة"
+                    data-product-price="7500"
+                  >
+                    <a
+                      href="payment.html?id=8"
+                      type="button"
+                      class="buy-now-button"
+                      ><i class="fas fa-credit-card"></i> شراء الخدمة الآن</a
+                    >
+                    <div class="blob-el"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer fade-in-up" style="animation-delay: 1.5s">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="/img/logo.png" alt="شعار Royal Store الأبيض" class="logo" />
+        </div>
+
+        <div class="footer-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="courses.html">الدورات</a>
+          <a href="summaries.html">الملخصات</a>
+          <a href="store.html">المتجر</a>
+        </div>
+
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="copyright">
+        &copy;جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
+      </div>
+    </footer>
+
+    <div id="loginModal" class="modal">
+           
+      <div class="modal-content modal-content-small">
+               
+        <span class="close-btn" data-modal="loginModal"
+          ><i class="fas fa-times"></i
+        ></span>
+               
+        <div class="modal-header">
+                   
+          <h3>تسجيل الدخول / إنشاء حساب</h3>
+                 
+        </div>
+               
+        <div class="modal-body login-body-minimal">
+                   
+          <form>
+                       
+            <div class="form-group">
+                            <label for="fullName">الاسم الكامل</label>          
+                  <input type="text" id="fullName" required />            
+            </div>
+                       
+            <div class="form-group">
+                            <label for="phone">رقم الجوال</label>              
+              <input type="tel" id="phone" required />            
+            </div>
+                       
+            <div class="form-group">
+                            <label for="securityCode">رمز الأمان</label>        
+                    <input type="password" id="securityCode" required />        
+                   
+              <a href="#" class="code-help-link">من أين أجيب رمز الأمان؟</a>    
+                     
+            </div>
+                       
+            <button type="submit" class="login-submit-btn">
+                            تسجيل الدخول            
+            </button>
+                     
+          </form>
+                 
+        </div>
+             
+      </div>
+         
+    </div>
+
+    <script src="index.js"></script>
+    <script src="store.js"></script>
+  </body>
+</html>

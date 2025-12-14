@@ -1,0 +1,1192 @@
+/* ======================= المتغيرات والأساسيات ======================= */
+:root {
+  --primary-color: #0056b3; /* الأزرق الجامعي */
+  --primary-dark: #003f7f; /* الأزرق الجامعي الغامق للفوتر و hover */
+  --light-gray: #6c757d; /* الرمادي الفاتح للنصوص */
+  --text-color: #333;
+  --border-radius-base: 10px;
+  --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15); /* ظل جديد للهوفر */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Cairo", Tahoma, sans-serif;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  direction: rtl;
+  text-align: right;
+  color: var(--text-color);
+  background-color: #f8f9fa;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+h1,
+h2,
+h3 {
+  margin-bottom: 0.5em;
+  font-weight: 800;
+}
+
+h1 {
+  font-size: 48px;
+}
+h2 {
+  font-size: 36px;
+  margin-bottom: 1.5em;
+  text-align: center;
+}
+p {
+  color: var(--light-gray);
+  line-height: 1.8;
+}
+
+section {
+  padding: 80px 5%;
+}
+
+/* ======================= شريط التنقل (Navbar) ======================= */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.logo {
+  height: 80px;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-item {
+  font-weight: bold;
+  color: var(--light-gray);
+  padding: 5px 0;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: var(--primary-color);
+}
+
+.nav-item::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+  width: 100%;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-icon-container {
+  position: relative;
+  cursor: pointer;
+}
+
+/* تحديث: أيقونة Font Awesome */
+.user-icon {
+  font-size: 32px; /* حجم 32px */
+  color: var(--light-gray);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.user-icon:hover {
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.user-icon-container[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.user-icon-container:hover[data-tooltip]::before {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.cta-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px); /* حركة بسيطة عند الهوفر */
+}
+
+/* ======================= قسم Hero ======================= */
+.hero-section {
+  padding: 0;
+  max-width: 1300px;
+  margin: 50px auto;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 900;
+}
+
+.hero-text p {
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.hero-cta-buttons {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* التعديل 1: حركة للأزرار */
+.animate-from-bottom {
+  opacity: 0;
+  animation: slideUp 1s ease 0.5s forwards; /* تأخير 0.5s بعد حركة النص */
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 25px;
+  border: 2px solid var(--primary-color);
+  background-color: white;
+  color: var(--primary-color);
+  border-radius: var(--border-radius-base);
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.hero-cta-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.05); /* تكبير بسيط عند الهوفر */
+}
+
+.hero-slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-base);
+  height: 440px;
+}
+
+.slider-wrapper {
+  display: flex;
+  height: 100%;
+  position: relative;
+}
+
+.slider-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 5s linear;
+}
+
+.slider-image.active {
+  opacity: 1;
+  z-index: 1;
+  transform: scale(1.03);
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 20px;
+  right: 50%;
+  transform: translateX(50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--light-gray);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: var(--primary-color);
+}
+
+/* ======================= قسم أحدث الدورات ======================= */
+.latest-courses-section {
+  background-color: #fff;
+}
+
+.courses-container {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.course-card {
+  min-width: 300px;
+  background-color: white;
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-base);
+  overflow: hidden;
+  /* تحديث الـ transition ليشمل الـ transform والـ opacity والـ box-shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.8s ease;
+  cursor: pointer;
+}
+
+/* الحركة عند الهوفر يجب أن تكون منفصلة عن حركة الظهور */
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.course-image-container {
+  height: 180px;
+  overflow: hidden;
+}
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-base) var(--border-radius-base) 0 0;
+  transition: transform 0.5s ease;
+}
+
+.course-card:hover .course-image {
+  transform: scale(1.05);
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.course-title {
+  color: var(--primary-color);
+  margin-top: 0;
+}
+
+.course-meta {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--light-gray);
+}
+
+.course-description {
+  font-size: 14px;
+  margin-bottom: 15px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.explore-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 0;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.explore-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ======================= قسم الأكثر طلبًا / المتجر ======================= */
+.store-container {
+  display: grid;
+  /* عرض 3 كاردات متساوية العرض */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-card {
+  background-color: white;
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-base);
+  overflow: hidden;
+  padding: 20px;
+  /* تحديث الـ transition ليشمل الـ transform والـ opacity والـ box-shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.8s ease;
+  position: relative; /* للكارد البادج */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* نمط كارد HOT SALE / المنتج */
+.hot-sale-card {
+  padding: 0; /* لإعطاء البادج والصورة مساحة كاملة */
+}
+
+.hot-sale-card .badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: linear-gradient(45deg, #ff4500, #ffa500);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 0 var(--border-radius-base) 0 var(--border-radius-base);
+  font-weight: bold;
+  z-index: 5;
+  transition: transform 0.3s ease;
+}
+.product-card:hover .badge {
+  transform: scale(1.1);
+}
+
+/* Wrapper للسلايدر وأزرار التحكم */
+.product-image-slider-wrapper {
+  position: relative;
+  height: 200px; /* ارتفاع الصور */
+  overflow: hidden;
+  border-radius: var(--border-radius-base) var(--border-radius-base) 0 0;
+  margin-bottom: 15px;
+}
+
+.product-image-slider {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.product-image.active {
+  opacity: 1;
+}
+
+.product-image-slider-wrapper:hover .product-image {
+  transform: scale(1.08); /* تكبير عند Hover */
+}
+
+/* أزرار السلايدر داخل الكارد */
+.prev-btn,
+.next-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  opacity: 0; /* إخفاء الأزرار في البداية */
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+.product-image-slider-wrapper:hover .prev-btn,
+.product-image-slider-wrapper:hover .next-btn {
+  opacity: 1;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev-btn {
+  right: 10px;
+}
+.next-btn {
+  left: 10px;
+}
+
+/* محتوى الكارد داخل الهوت سيل */
+.hot-sale-card .card-content {
+  padding: 20px;
+  padding-top: 0; /* تم إزالة الـ padding العلوي لأنه أضيف في Wrapper */
+}
+
+.product-category {
+  font-size: 12px;
+  color: var(--light-gray);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.spec-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  font-size: 14px;
+  color: var(--light-gray);
+}
+
+.spec-list i {
+  color: green;
+  margin-left: 5px;
+}
+
+.price-info {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #dc3545;
+  font-size: 14px;
+}
+
+.new-price {
+  color: var(--primary-color);
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.rating .gold {
+  color: gold;
+}
+
+.stock-status {
+  font-size: 14px;
+  color: green;
+  margin: 10px 0;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ======================= قسم من نحن مع العدادات ======================= */
+.about-us-section {
+  text-align: center;
+  background-color: #f1f1f1;
+}
+
+.about-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* تقسيم المحتوى إلى عمودين */
+  gap: 50px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: right;
+  align-items: center;
+}
+
+.about-image-container {
+  overflow: hidden;
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-base);
+}
+
+/* التأثير التفاعلي عند الهوفر على الصورة */
+.about-image-container:hover .about-image {
+  transform: scale(1.05);
+}
+
+/* إخفاء الصورة في البداية لتفعيل حركة الظهور عليها */
+.about-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+  opacity: 0; /* لإخفاءها قبل حركة الظهور */
+}
+
+.about-description {
+  max-width: 100%;
+  margin: 0 0 40px 0;
+  font-size: 18px;
+  text-align: right;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: flex-start; /* العدادات من اليمين */
+  gap: 50px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.counter {
+  font-size: 50px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.stat-title {
+  font-size: 20px;
+  color: var(--light-gray);
+  margin-top: 5px;
+}
+
+/* ======================= تذييل الصفحة (Footer) ======================= */
+.site-footer {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 40px 5%;
+  position: relative;
+  overflow: hidden; /* لإخفاء أي جزء من الحركة يخرج عن حدود الفوتر */
+}
+
+/* حركة الدخول الأولية للتذييل */
+.animate-footer {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: footerSlideIn 0.8s ease forwards;
+  animation-delay: 0.5s; /* تأخير بسيط للدخول */
+}
+
+@keyframes footerSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto 20px auto;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-logo img {
+  height: 60px;
+  transition: transform 0.5s ease;
+}
+
+.footer-logo:hover img {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 15px;
+  position: relative;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+.footer-links a::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease, right 0.3s ease;
+}
+
+.footer-links a:hover::after {
+  width: 100%;
+  right: 0;
+}
+
+.social-icons a {
+  color: white;
+  margin-right: 15px;
+  font-size: 24px; /* تكبير الأيقونات */
+  transition: transform 0.3s ease, color 0.3s ease, rotate 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.3) rotate(360deg); /* دوران كامل وزيادة حجم */
+  color: #ff4500; /* لون جديد عند الهوفر */
+}
+
+.copyright {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+/* ======================= مودال تسجيل الدخول ======================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s ease;
+}
+
+.modal.active {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  border-radius: var(--border-radius-base);
+  box-shadow: var(--shadow-base);
+  width: 90%;
+  max-width: 800px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.fadeIn .modal-content {
+  animation: fadeIn 0.3s ease-out, slideDown 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  color: #aaa;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 10px 15px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: var(--primary-color);
+}
+
+.modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 400px;
+}
+
+.modal-image-side {
+  background-color: #eee;
+  overflow: hidden;
+}
+
+.login-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-form-side {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal-form-side h3 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+/* تنسيق wrapper للإدخال والإيقونة */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* ظل مبدئي */
+  padding-right: 10px;
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); /* ظل عند التركيز */
+  transform: scale(1.02); /* تأثير 3D بسيط */
+}
+
+.input-icon {
+  color: var(--light-gray);
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: var(--primary-color);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.form-group input:focus {
+  outline: none; /* إزالة التركيز الافتراضي */
+}
+
+.code-help-link {
+  display: block;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.login-submit-btn {
+  width: 100%;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-submit-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ======================= استجابة الشاشة (Responsive Design) ======================= */
+@media (max-width: 992px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .hero-slider {
+    order: -1;
+    height: 300px;
+  }
+
+  .navbar-content {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px 5%;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .nav-actions {
+    order: 2;
+  }
+
+  .about-content-wrapper {
+    grid-template-columns: 1fr; /* عمود واحد */
+    text-align: center;
+  }
+
+  .about-description {
+    text-align: center;
+  }
+
+  .stats-container {
+    justify-content: center;
+  }
+
+  .store-container {
+    /* لعرض كاردين في الصف في الشاشات المتوسطة */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 36px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+
+  .latest-courses-section .courses-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .course-card {
+    max-width: 90%;
+  }
+
+  .stat-item {
+    min-width: 40%;
+  }
+
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-image-side {
+    display: none;
+  }
+
+  .footer-content {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-links {
+    order: 1;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .footer-logo {
+    order: 2;
+    margin-bottom: 15px;
+  }
+
+  .social-icons {
+    order: 3;
+  }
+
+  .store-container {
+    /* لعرض كارد واحد في الصف في الشاشات الصغيرة */
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======================= تأثيرات الحركات (Animation Classes) ======================= */
+.slideInRight {
+  opacity: 0;
+  transform: translateX(20px);
+  animation: slideInRight 0.8s ease forwards;
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slideInLeft {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInLeft 0.8s ease forwards;
+}
+
+@keyframes slideInLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---------------------------------------------------- */
+/* حركات الظهور عند التمرير (Scroll Animation) */
+/* ---------------------------------------------------- */
+
+/* الحركة الأساسية لظهور الكاردات (النزول من الأعلى) */
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    /* يبدأ من الأعلى (سالب) */
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* الحالة المبدئية: إخفاء الكاردات وجعلها مستعدة للحركة */
+.course-card:not(.visible),
+.product-card:not(.visible) {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+/* حالة الظهور: تفعيل الحركة (تُضاف بواسطة JavaScript) */
+.course-card.visible,
+.product-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation-name: cardSlideIn;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(
+    0.175,
+    0.885,
+    0.32,
+    1.275
+  ); /* حركة نطاطة قليلاً */
+  animation-fill-mode: both;
+}
+
+/* حركة ظهور صورة من نحن (الصعود من الأسفل) */
+.about-image.animate-from-bottom {
+  opacity: 0; /*Overrides initial opacity: 0; */
+  animation-delay: 0.3s; /* تأخير بسيط بعد ظهور القسم نفسه */
+  /* إعادة استخدام keyframes slideUp من قسم Hero */
+  animation-name: slideUp;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+}
+
+/* ======================= تنسيق شاشة التحميل (مؤشر الانتظار) - دون تغيير ======================= */
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95); /* خلفية بيضاء شبه شفافة */
+  z-index: 9999; /* يضمن ظهورها فوق جميع العناصر */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+/* فئة الإظهار (يتم إضافتها بواسطة JS) */
+.loading-screen.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.spinner i {
+  color: var(--primary-color); /* اللون الأزرق */
+  font-size: 50px;
+}
+
+.loading-screen p {
+  margin-top: 20px;
+  font-size: 18px;
+  color: var(--text-dark);
+}
+
+/* ======================= تخصيص شريط التمرير (Scrollbar Customization) - حجم كبير ======================= */
+
+/* 1. إعدادات Firefox (مقاس متوسط) */
+html {
+  scrollbar-width: 16px; /* جعل العرض واضحاً في فايرفوكس */
+  scrollbar-color: var(--primary-dark) #f1f1f1;
+}
+
+/* 2. تخصيص شريط التمرير في متصفحات WebKit (Chrome, Safari, Edge) */
+/* تحديد عرض شريط التمرير */
+::-webkit-scrollbar {
+  width: 16px; /* 💡 التعديل: تم زيادته إلى 16 بكسل ليكون أكبر */
+  height: 16px; /* للعرض الأفقي */
+}
+
+/* 3. تصميم المسار (Track) الذي يتحرك فيه شريط التمرير */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* لون خلفية المسار */
+  border-radius: 10px;
+}
+
+/* 4. تصميم المقبض (Thumb) - الجزء الذي يتم سحبه */
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-dark); /* اللون الأزرق الداكن */
+  border-radius: 10px; /* جعل الحواف مستديرة قليلاً */
+  /* جعل الإطار أعرض ليعطي إحساساً بالمربع الثقيل */
+  border: 4px solid #f1f1f1;
+}
+
+/* 5. تصميم المقبض عند التمرير عليه بالماوس (Hover) */
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-color); /* لون أفتح عند التفاعل */
+}
+
+/* تنسيقات إضافية للمودال */
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+.tab-btn.active {
+  background: var(--primary-color);
+  color: white;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+#userWelcome {
+  display: none;
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  z-index: 1001;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.5s ease;
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}

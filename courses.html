@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اكادمية زد | الدورات</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="courses.css" />
+    <link rel="icon" type="image/png" href="/img/logotop.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="navbar-content">
+        <a href="index.html" class="logo-link">
+          <img src="/img/logo.png" alt="شعار Royal Store" class="logo" />
+        </a>
+
+        <nav class="nav-links">
+          <a href="index.html" class="nav-item">الرئيسية</a>
+          <a href="courses.html" class="nav-item active">الدورات</a>
+          <a href="summaries.html" class="nav-item">الملخصات</a>
+          <a href="store.html" class="nav-item">المتجر</a>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="user-icon-container" data-tooltip="تسجيل الدخول">
+            <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
+          </div>
+
+          <a href="store.html" class="cta-button">ابدأ الآن</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero courses-hero">
+        <h1>جميع دوراتنا</h1>
+        <p>
+          استعرض مئات الدورات الاحترافية في مختلف المجالات، وابدأ رحلة تعلمك
+          وتطوير مهاراتك اليوم.
+        </p>
+
+        <div class="search-container">
+          <div class="search-bar">
+            <input
+              type="text"
+              id="courseSearchInput"
+              placeholder="ابحث عن دورة..."
+            />
+            <button class="search-btn">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+
+          <button class="toggle-filter-btn" id="toggleFilterBtn">
+            <i class="fas fa-filter"></i> تصفية
+          </button>
+        </div>
+      </section>
+
+      <div class="courses-content-wrapper">
+        <aside class="sidebar-filter" id="sidebarFilter">
+          <div class="filter-group">
+            <h3>التصنيف</h3>
+            <div class="filter-options">
+              <label
+                ><input type="checkbox" data-filter="web" /> تطوير الويب</label
+              >
+              <label
+                ><input type="checkbox" data-filter="design" /> التصميم</label
+              >
+              <label
+                ><input type="checkbox" data-filter="marketing" />
+                التسويق</label
+              >
+              <label
+                ><input type="checkbox" data-filter="programming" />
+                البرمجة</label
+              >
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3>مستوى الصعوبة</h3>
+            <div class="filter-options">
+              <label
+                ><input type="radio" name="level" data-filter="beginner" />
+                مبتدئ</label
+              >
+              <label
+                ><input type="radio" name="level" data-filter="intermediate" />
+                متوسط</label
+              >
+              <label
+                ><input type="radio" name="level" data-filter="advanced" />
+                متقدم</label
+              >
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3>نوع الدورة</h3>
+            <div class="filter-options">
+              <label
+                ><input type="radio" name="type" data-filter="free" />
+                مجانية</label
+              >
+              <label
+                ><input type="radio" name="type" data-filter="paid" />
+                مدفوعة</label
+              >
+            </div>
+          </div>
+
+          <button class="apply-filter-btn">تطبيق الفلاتر</button>
+          <button class="reset-filter-btn">إلغاء الفلاتر</button>
+        </aside>
+
+        <section class="all-courses-section">
+          <div class="course-stats">
+            <p>تم العثور على <span id="courseCount">8</span> دورات احترافية.</p>
+            <div class="sort-options">
+              <label for="sortOrder">ترتيب حسب:</label>
+              <select id="sortOrder">
+                <option value="newest">الأحدث</option>
+                <option value="popular">الأكثر شعبية</option>
+                <option value="price-low">السعر: الأدنى أولاً</option>
+                <option value="price-high">السعر: الأعلى أولاً</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="courses-grid" id="coursesGrid">
+            <div
+              class="course-card"
+              data-category="web programming"
+              data-level="beginner"
+              data-type="paid"
+              data-price="199"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-web-dev.svg"
+                  alt="دورة تطوير الويب للمبتدئين"
+                  class="course-image"
+                />
+                <span class="course-tag paid-tag">مدفوعة</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">
+                  بناء تطبيقات ويب متكاملة (Full Stack)
+                </h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 40 ساعة </span>
+                  <span><i class="far fa-heart"></i> 520 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> أحمد علي</span>
+                </div>
+                <p class="course-description">
+                  تعلم أساسيات تطوير الويب بالكامل من الواجهة الأمامية إلى
+                  الخلفية.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">199 ر.س</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="design"
+              data-level="intermediate"
+              data-type="paid"
+              data-price="299"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-ui-ux.svg"
+                  alt="دورة تصميم واجهات المستخدم"
+                  class="course-image"
+                />
+                <span class="course-tag paid-tag">مدفوعة</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">الإتقان في تصميم UI/UX الاحترافي</h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 25 ساعة </span>
+                  <span><i class="far fa-heart"></i> 700 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> سارة خالد</span>
+                </div>
+                <p class="course-description">
+                  تعلم كيفية تصميم تجربة مستخدم ممتازة وواجهات عصرية باستخدام
+                  Figma.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">299 ر.س</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="marketing"
+              data-level="beginner"
+              data-type="free"
+              data-price="0"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-seo.svg"
+                  alt="دورة التسويق الرقمي"
+                  class="course-image"
+                />
+                <span class="course-tag free-tag">مجانية</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">
+                  أساسيات التسويق الرقمي والسيو (SEO)
+                </h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 10 ساعات </span>
+                  <span><i class="far fa-heart"></i> 1200 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> فاطمة محمد</span>
+                </div>
+                <p class="course-description">
+                  دورة مجانية لتعلم كيفية تحسين محركات البحث وجذب الزوار لموقعك.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">مجاناً</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="programming"
+              data-level="intermediate"
+              data-type="paid"
+              data-price="350"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-python.svg"
+                  alt="دورة بايثون المتقدمة"
+                  class="course-image"
+                />
+                <span class="course-tag paid-tag">مدفوعة</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">بايثون المتقدمة وتحليل البيانات</h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 30 ساعة </span>
+                  <span><i class="far fa-heart"></i> 400 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> يوسف نادر</span>
+                </div>
+                <p class="course-description">
+                  تعلم مفاهيم متقدمة في بايثون وتطبيقها في مجال تحليل البيانات.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">350 ر.س</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="web"
+              data-level="advanced"
+              data-type="paid"
+              data-price="450"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-react.svg"
+                  alt="دورة ReactJS"
+                  class="course-image"
+                />
+                <span class="course-tag paid-tag">مدفوعة</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">إتقان ReactJS لبناء تطبيقات ضخمة</h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 55 ساعة </span>
+                  <span><i class="far fa-heart"></i> 950 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> علي حسن</span>
+                </div>
+                <p class="course-description">
+                  دورة شاملة في مكتبة ReactJS وكيفية استخدام الأدوات الحديثة مثل
+                  Redux.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">450 ر.س</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="design"
+              data-level="beginner"
+              data-type="free"
+              data-price="0"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-photoshop.svg"
+                  alt="دورة فوتوشوب للمبتدئين"
+                  class="course-image"
+                />
+                <span class="course-tag free-tag">مجانية</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">أساسيات فوتوشوب للمبتدئين</h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 8 ساعات </span>
+                  <span><i class="far fa-heart"></i> 800 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> منى سعيد</span>
+                </div>
+                <p class="course-description">
+                  ابدأ رحلتك في عالم التصميم وتعلم الأساسيات القوية لبرنامج
+                  فوتوشوب.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">مجاناً</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="marketing"
+              data-level="advanced"
+              data-type="paid"
+              data-price="399"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-social-media.svg"
+                  alt="إدارة حملات التواصل الاجتماعي"
+                  class="course-image"
+                />
+                <span class="course-tag paid-tag">مدفوعة</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">
+                  إدارة حملات التواصل الاجتماعي الاحترافية
+                </h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 20 ساعة </span>
+                  <span><i class="far fa-heart"></i> 600 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> نادر إبراهيم</span>
+                </div>
+                <p class="course-description">
+                  تعلم بناء وإدارة وتحليل الحملات الإعلانية على مختلف منصات
+                  التواصل.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">399 ر.س</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="course-card"
+              data-category="programming"
+              data-level="intermediate"
+              data-type="free"
+              data-price="0"
+            >
+              <div class="course-image-container">
+                <img
+                  src="/img/course-sql.svg"
+                  alt="دورة قواعد البيانات SQL"
+                  class="course-image"
+                />
+                <span class="course-tag free-tag">مجانية</span>
+              </div>
+              <div class="card-content">
+                <h3 class="course-title">أساسيات قواعد البيانات ولغة SQL</h3>
+                <div class="course-meta">
+                  <span><i class="far fa-clock"></i> 15 ساعة </span>
+                  <span><i class="far fa-heart"></i> 1000 إعجاب </span>
+                  <span><i class="fas fa-user-tie"></i> خالد فهد</span>
+                </div>
+                <p class="course-description">
+                  تعلم كيفية بناء وإدارة قواعد البيانات العلائقية بأساسيات لغة
+                  SQL.
+                </p>
+                <div class="course-footer-details">
+                  <span class="course-price">مجاناً</span>
+                  <a href="#" class="explore-btn">عرض التفاصيل</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-results-message" id="noResults" style="display: none">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>عفواً، لا توجد دورات مطابقة لمعايير البحث!</h3>
+            <p>
+              حاول تغيير معايير التصفية أو إلغاء البحث للعودة إلى جميع الدورات.
+            </p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="/img/logo.png" alt="شعار Royal Store الأبيض" class="logo" />
+        </div>
+
+        <div class="footer-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="courses.html">الدورات</a>
+          <a href="summaries.html">الملخصات</a>
+          <a href="store.html">المتجر</a>
+        </div>
+
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="copyright">
+        &copy;جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
+      </div>
+    </footer>
+
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-body">
+          <div class="modal-image-side">
+            <img
+              src="/img/lolo.gif"
+              alt="صورة تسجيل الدخول"
+              class="login-img"
+            />
+          </div>
+          <div class="modal-form-side">
+            <h3>تسجيل الدخول / إنشاء حساب</h3>
+            <form>
+              <div class="form-group">
+                <label for="fullName">الاسم الكامل</label>
+                <input type="text" id="fullName" required />
+              </div>
+              <div class="form-group">
+                <label for="phone">رقم الجوال</label>
+                <input type="tel" id="phone" required />
+              </div>
+              <div class="form-group">
+                <label for="securityCode">رمز الأمان</label>
+                <input type="password" id="securityCode" required />
+                <a href="#" class="code-help-link">من أين أجيب رمز الأمان؟</a>
+              </div>
+              <button type="submit" class="login-submit-btn">
+                تسجيل الدخول
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ الانتقال...</p>
+    </div>
+    <script src="courses.js"></script>
+  </body>
+</html>

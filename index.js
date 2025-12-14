@@ -163,18 +163,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       loginModal.classList.add("active", "fadeIn");
+      // منع التمرير عند فتح المودال
+      document.body.style.overflow = "hidden";
     });
   }
 
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
       loginModal.classList.remove("active", "fadeIn");
+      // إعادة التمرير عند إغلاق المودال
+      document.body.style.overflow = "auto";
     });
   }
 
   window.addEventListener("click", (event) => {
     if (event.target === loginModal) {
       loginModal.classList.remove("active", "fadeIn");
+      document.body.style.overflow = "auto";
     }
   });
 
@@ -194,12 +199,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const progress = Math.min(elapsed / duration, 1);
       const value = Math.floor(progress * target);
 
-      counter.innerText = value;
+      counter.innerText = value.toLocaleString();
 
       if (progress < 1) {
         requestAnimationFrame(updateCount);
       } else {
-        counter.innerText = target;
+        counter.innerText = target.toLocaleString();
       }
     }
     requestAnimationFrame(updateCount);
@@ -213,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
             counters.forEach(animateCounter);
             if (aboutImage) {
               aboutImage.style.opacity = 1;
+              aboutImage.classList.add("animate-from-bottom");
             }
             hasAnimated = true;
           }
@@ -432,6 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
           phone: phone,
           email: email || `${phone}@temp.com`,
           security_code: securityCode,
+          avatar: "11.svg", // صورة افتراضية
           created_at: new Date().toISOString(),
         };
 
@@ -496,6 +503,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // إغلاق المودال
         loginModal.classList.remove("active", "fadeIn");
+        document.body.style.overflow = "auto";
 
         // إظهار إشعار نجاح
         showNotification(
@@ -588,6 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // إغلاق المودال
         loginModal.classList.remove("active", "fadeIn");
+        document.body.style.overflow = "auto";
 
         // إظهار إشعار نجاح
         showNotification(
@@ -617,59 +626,19 @@ document.addEventListener("DOMContentLoaded", () => {
     showNotification("✅ تم تسجيل الخروج بنجاح.", "success");
   };
 
-  // ======================= 11. التحقق من تسجيل الدخول قبل الشراء =======================
+  // ======================= 11. معالجة أزرار الشراء =======================
   function handlePurchase(e) {
     e.preventDefault();
 
     if (!currentUser) {
       showNotification("يجب تسجيل الدخول أولاً للقيام بالشراء!", "error");
       loginModal.classList.add("active", "fadeIn");
+      document.body.style.overflow = "hidden";
       return;
     }
 
-    const button = e.target.closest("button") || e.target;
-    const productId = button.getAttribute("data-product");
-    const productName =
-      button.closest(".product-card")?.querySelector(".product-title")
-        ?.textContent ||
-      button.closest(".course-card")?.querySelector(".course-title")
-        ?.textContent ||
-      "المنتج";
-
-    // عرض حالة التحميل على الزر
-    button.classList.add("loading");
-    button.disabled = true;
-
-    // محاكاة عملية الشراء
-    setTimeout(() => {
-      // حفظ في سلة المشتريات
-      const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
-      cartItems.push({
-        productId: productId,
-        productName: productName,
-        userId: currentUser.id,
-        date: new Date().toISOString(),
-        price:
-          button.closest(".product-card")?.querySelector(".new-price")
-            ?.textContent || "غير محدد",
-      });
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-
-      // إظهار إشعار النجاح
-      showNotification(
-        `✅ تمت إضافة "${productName}" إلى سلة المشتريات`,
-        "success"
-      );
-
-      // إخفاء حالة التحميل
-      button.classList.remove("loading");
-      button.disabled = false;
-
-      // التوجيه إلى صفحة الدفع بعد ثانيتين
-      setTimeout(() => {
-        window.location.href = "دفع.html";
-      }, 2000);
-    }, 1500);
+    // التوجيه إلى صفحة الدفع مباشرة
+    window.location.href = "دفع.html";
   }
 
   // إضافة مستمعين لأزرار الشراء
@@ -684,7 +653,166 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", handlePurchase);
   });
 
-  // ======================= 12. تهيئة التطبيق =======================
+  // ======================= 12. مودال الإعدادات =======================
+  function openSettingsModal() {
+    if (!currentUser) {
+      showNotification("يجب تسجيل الدخول أولاً!", "error");
+      return;
+    }
+
+    const settingsModal = document.getElementById("settingsModal");
+    if (!settingsModal) return;
+
+    // تعبئة البيانات الحالية
+    document.getElementById("settingsFullName").value = currentUser.full_name;
+    document.getElementById("settingsPhone").value = currentUser.phone;
+    document.getElementById("settingsEmail").value = currentUser.email;
+
+    // تعيين الصورة الحالية
+    const avatarPreview = document.getElementById("avatarPreview");
+    if (avatarPreview && currentUser.avatar) {
+      avatarPreview.src = currentUser.avatar;
+    }
+
+    // تحديد الصورة الحالية في الخيارات
+    const avatarOptions = document.querySelectorAll(".avatar-option");
+    avatarOptions.forEach((option) => {
+      if (option.src === currentUser.avatar) {
+        option.classList.add("selected");
+      } else {
+        option.classList.remove("selected");
+      }
+    });
+
+    settingsModal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeSettingsModal() {
+    const settingsModal = document.getElementById("settingsModal");
+    if (settingsModal) {
+      settingsModal.classList.remove("active");
+      document.body.style.overflow = "auto";
+    }
+  }
+
+  // إضافة حدث لفتح الإعدادات
+  document
+    .getElementById("loggedInUser")
+    ?.addEventListener("click", function (e) {
+      if (!e.target.closest(".logout-btn-small")) {
+        openSettingsModal();
+      }
+    });
+
+  // إدارة اختيار الصورة
+  document.querySelectorAll(".avatar-option").forEach((option) => {
+    option.addEventListener("click", function () {
+      document.querySelectorAll(".avatar-option").forEach((opt) => {
+        opt.classList.remove("selected");
+      });
+      this.classList.add("selected");
+
+      const avatarPreview = document.getElementById("avatarPreview");
+      avatarPreview.src = this.src;
+    });
+  });
+
+  // حفظ الإعدادات
+  document
+    .getElementById("saveSettings")
+    ?.addEventListener("click", async function () {
+      const fullName = document.getElementById("settingsFullName").value;
+      const phone = document.getElementById("settingsPhone").value;
+      const email = document.getElementById("settingsEmail").value;
+      const selectedAvatar = document.querySelector(
+        ".avatar-option.selected"
+      )?.src;
+
+      if (!fullName || !phone) {
+        showNotification("الاسم ورقم الجوال مطلوبان!", "error");
+        return;
+      }
+
+      const phoneRegex = /^05\d{8}$/;
+      if (!phoneRegex.test(phone)) {
+        showNotification(
+          "يرجى إدخال رقم جوال صحيح (يبدأ بـ 05 ويحتوي على 10 أرقام)",
+          "error"
+        );
+        return;
+      }
+
+      try {
+        // تحديث بيانات المستخدم
+        currentUser.full_name = fullName;
+        currentUser.phone = phone;
+        currentUser.email = email;
+        currentUser.avatar = selectedAvatar;
+
+        // تحديث في التخزين المحلي
+        localStorage.setItem("user", JSON.stringify(currentUser));
+
+        // تحديث في قاعدة البيانات إن أمكن
+        try {
+          const { error } = await supabase
+            .from("users")
+            .update({
+              full_name: fullName,
+              phone: phone,
+              email: email,
+              avatar: selectedAvatar,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", currentUser.id);
+
+          if (error) {
+            console.log("ملاحظة: فشل تحديث في قاعدة البيانات:", error.message);
+          }
+        } catch (dbError) {
+          console.log("⚠️ خطأ في الاتصال بقاعدة البيانات:", dbError.message);
+        }
+
+        // تحديث في التخزين المحلي للنسخ الاحتياطية
+        const localUsers = JSON.parse(
+          localStorage.getItem("localUsers") || "[]"
+        );
+        const userIndex = localUsers.findIndex(
+          (u) => u.id === currentUser.id || u.phone === currentUser.phone
+        );
+        if (userIndex !== -1) {
+          localUsers[userIndex] = currentUser;
+          localStorage.setItem("localUsers", JSON.stringify(localUsers));
+        }
+
+        // تحديث الواجهة
+        updateUIForLoggedInUser();
+
+        // إغلاق المودال
+        closeSettingsModal();
+
+        showNotification("✅ تم تحديث بياناتك بنجاح!", "success");
+      } catch (error) {
+        console.error("فشل تحديث البيانات:", error);
+        showNotification("حدث خطأ أثناء تحديث البيانات!", "error");
+      }
+    });
+
+  // إلغاء الإعدادات
+  document
+    .getElementById("cancelSettings")
+    ?.addEventListener("click", closeSettingsModal);
+
+  // إغلاق مودال الإعدادات عند النقر خارجها
+  document
+    .getElementById("settingsModal")
+    ?.addEventListener("click", function (e) {
+      if (e.target === this) {
+        closeSettingsModal();
+      }
+    });
+
+  // ======================= 13. تهيئة التطبيق =======================
 
   // التحقق من حالة تسجيل الدخول
   checkAuth();
@@ -725,5 +853,13 @@ window.hideLogoutConfirm = function () {
   const logoutModal = document.getElementById("logoutConfirmModal");
   if (logoutModal) {
     logoutModal.classList.remove("active");
+  }
+};
+
+window.openSettingsModal = function () {
+  const settingsModal = document.getElementById("settingsModal");
+  if (settingsModal) {
+    settingsModal.classList.add("active");
+    document.body.style.overflow = "hidden";
   }
 };

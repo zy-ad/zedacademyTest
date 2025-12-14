@@ -18,50 +18,6 @@
     />
     <!-- إضافة مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-      .tab-btn {
-        padding: 10px 20px;
-        border: none;
-        background: #f0f0f0;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: bold;
-      }
-      .tab-btn.active {
-        background: var(--primary-color);
-        color: white;
-      }
-      .tab-content {
-        display: none;
-      }
-      .tab-content.active {
-        display: block;
-      }
-      #userWelcome {
-        display: none;
-        position: fixed;
-        top: 90px;
-        right: 20px;
-        background: var(--primary-color);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        z-index: 1001;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        animation: slideInRight 0.5s ease;
-      }
-      .logout-btn {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-right: 10px;
-        font-size: 12px;
-      }
-    </style>
   </head>
   <body>
     <header class="navbar">
@@ -78,23 +34,57 @@
         </nav>
 
         <div class="nav-actions">
-          <div
-            class="user-icon-container"
-            data-tooltip="تسجيل الدخول"
-            id="userIconContainer"
-          >
+          <!-- عنصر المستخدم بعد تسجيل الدخول -->
+          <div id="loggedInUser" class="logged-in-user" style="display: none">
+            <div class="user-profile">
+              <img
+                src="default-avatar.png"
+                alt="صورة المستخدم"
+                class="user-avatar"
+              />
+              <span class="user-name" id="displayUserName"></span>
+            </div>
+            <button class="logout-btn-small" onclick="showLogoutConfirm()">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+
+          <!-- أيقونة المستخدم قبل تسجيل الدخول -->
+          <div class="user-icon-container" id="userIconContainer">
             <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
           </div>
 
-          <a href="store.html" class="cta-button">ابدأ الآن</a>
+          <a href="store.html" class="cta-button" id="ctaButton">ابدأ الآن</a>
         </div>
       </div>
     </header>
 
-    <!-- رسالة ترحيبية للمستخدم المسجل -->
-    <div id="userWelcome">
-      <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
-      مرحباً، <span id="userName"></span>
+    <!-- إشعارات جانبية -->
+    <div id="notification" class="notification">
+      <i class="fas fa-check-circle"></i>
+      <span class="notification-text"></span>
+    </div>
+
+    <!-- نافذة تأكيد تسجيل الخروج -->
+    <div id="logoutConfirmModal" class="confirm-modal">
+      <div class="confirm-content">
+        <i
+          class="fas fa-sign-out-alt"
+          style="font-size: 50px; color: #dc3545; margin-bottom: 15px"
+        ></i>
+        <h3 style="margin-bottom: 10px">تأكيد تسجيل الخروج</h3>
+        <p style="color: #666; margin-bottom: 25px">
+          هل أنت متأكد من رغبتك في تسجيل الخروج؟
+        </p>
+        <div class="confirm-buttons">
+          <button class="confirm-btn confirm-yes" onclick="logout()">
+            نعم، سجل خروج
+          </button>
+          <button class="confirm-btn confirm-no" onclick="hideLogoutConfirm()">
+            لا، إلغاء
+          </button>
+        </div>
+      </div>
     </div>
 
     <main>
@@ -170,7 +160,9 @@
               <p class="course-description">
                 هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
               </p>
-              <a href="courses.html" class="explore-btn">حجز الدورة</a>
+              <a href="دفع.html" class="explore-btn course-buy-btn"
+                >حجز الدورة</a
+              >
             </div>
           </div>
           <div class="course-card">
@@ -191,7 +183,9 @@
               <p class="course-description">
                 هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
               </p>
-              <a href="courses.html" class="explore-btn">حجز الدورة</a>
+              <a href="دفع.html" class="explore-btn course-buy-btn"
+                >حجز الدورة</a
+              >
             </div>
           </div>
           <div class="course-card">
@@ -212,7 +206,9 @@
               <p class="course-description">
                 هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
               </p>
-              <a href="courses.html" class="explore-btn">حجز الدورة</a>
+              <a href="دفع.html" class="explore-btn course-buy-btn"
+                >حجز الدورة</a
+              >
             </div>
           </div>
         </div>
@@ -275,8 +271,11 @@
               <div class="stock-status">
                 <i class="fas fa-cubes"></i> متوفر | دومين مخصص
               </div>
-              <button class="add-to-cart-btn" data-product="prodA">
-                <i class="fas fa-cart-plus"></i> شراء
+              <button
+                class="add-to-cart-btn product-buy-btn"
+                data-product="prodA"
+              >
+                <i class="fas fa-cart-plus"></i> شراء الآن
               </button>
             </div>
           </div>
@@ -333,8 +332,11 @@
               <div class="stock-status">
                 <i class="fas fa-cubes"></i> متوفر | دومين مخصص
               </div>
-              <button class="add-to-cart-btn" data-product="prodB">
-                <i class="fas fa-cart-plus"></i>شراء
+              <button
+                class="add-to-cart-btn product-buy-btn"
+                data-product="prodB"
+              >
+                <i class="fas fa-cart-plus"></i> شراء الآن
               </button>
             </div>
           </div>
@@ -399,8 +401,11 @@
               <div class="stock-status">
                 <i class="fas fa-cubes"></i> متوفر | شراء لمرة واحدة
               </div>
-              <button class="add-to-cart-btn" data-product="prodC">
-                <i class="fas fa-cart-plus"></i>شراء
+              <button
+                class="add-to-cart-btn product-buy-btn"
+                data-product="prodC"
+              >
+                <i class="fas fa-cart-plus"></i> شراء الآن
               </button>
             </div>
           </div>
@@ -478,19 +483,13 @@
             <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
           </div>
           <div class="modal-form-side">
-            <div
-              id="formTabs"
-              style="
-                display: flex;
-                justify-content: center;
-                margin-bottom: 20px;
-                gap: 20px;
-              "
-            >
-              <button type="button" id="loginTab" class="tab-btn active">
+            <!-- مفتاح التبديل المنزلق -->
+            <div class="switch-tabs">
+              <div class="switch-slider" id="switchSlider"></div>
+              <button type="button" class="switch-btn active" data-tab="login">
                 تسجيل الدخول
               </button>
-              <button type="button" id="registerTab" class="tab-btn">
+              <button type="button" class="switch-btn" data-tab="register">
                 تسجيل جديد
               </button>
             </div>
@@ -512,7 +511,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="loginSecurityCode">رمز الأمان (909090)</label>
+                  <label for="loginSecurityCode">رمز الأمان</label>
                   <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input
@@ -526,8 +525,15 @@
                     >رمز الأمان الافتراضي هو 909090</a
                   >
                 </div>
-                <button type="submit" class="login-submit-btn">
-                  تسجيل الدخول
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="loginSubmitBtn"
+                >
+                  <span class="btn-text">تسجيل الدخول</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
                 </button>
               </form>
             </div>
@@ -573,7 +579,7 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="registerSecurityCode">رمز الأمان (909090)</label>
+                  <label for="registerSecurityCode">رمز الأمان</label>
                   <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input
@@ -587,8 +593,15 @@
                     >رمز الأمان الافتراضي هو 909090</a
                   >
                 </div>
-                <button type="submit" class="login-submit-btn">
-                  إنشاء حساب
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="registerSubmitBtn"
+                >
+                  <span class="btn-text">إنشاء حساب</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
                 </button>
               </form>
             </div>

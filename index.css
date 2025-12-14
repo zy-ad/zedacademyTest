@@ -6,7 +6,7 @@
   --text-color: #333;
   --border-radius-base: 10px;
   --shadow-base: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15); /* ظل جديد للهوفر */
+  --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 * {
@@ -119,14 +119,60 @@ section {
   gap: 15px;
 }
 
+/* عنصر المستخدم بعد تسجيل الدخول */
+.logged-in-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 86, 179, 0.1);
+  padding: 8px 15px;
+  border-radius: 25px;
+  border: 1px solid rgba(0, 86, 179, 0.2);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-color);
+}
+
+.user-name {
+  font-weight: bold;
+  color: var(--primary-color);
+  font-size: 14px;
+}
+
+.logout-btn-small {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn-small:hover {
+  background: rgba(220, 53, 69, 0.1);
+  transform: scale(1.1);
+}
+
 .user-icon-container {
   position: relative;
   cursor: pointer;
 }
 
-/* تحديث: أيقونة Font Awesome */
 .user-icon {
-  font-size: 32px; /* حجم 32px */
+  font-size: 32px;
   color: var(--light-gray);
   transition: color 0.3s ease, transform 0.3s ease;
 }
@@ -168,7 +214,7 @@ section {
 
 .cta-button:hover {
   background-color: var(--primary-dark);
-  transform: translateY(-2px); /* حركة بسيطة عند الهوفر */
+  transform: translateY(-2px);
 }
 
 /* ======================= قسم Hero ======================= */
@@ -201,10 +247,9 @@ section {
   flex-wrap: wrap;
 }
 
-/* التعديل 1: حركة للأزرار */
 .animate-from-bottom {
   opacity: 0;
-  animation: slideUp 1s ease 0.5s forwards; /* تأخير 0.5s بعد حركة النص */
+  animation: slideUp 1s ease 0.5s forwards;
 }
 @keyframes slideUp {
   from {
@@ -233,7 +278,7 @@ section {
 .hero-cta-btn:hover {
   background-color: var(--primary-color);
   color: white;
-  transform: scale(1.05); /* تكبير بسيط عند الهوفر */
+  transform: scale(1.05);
 }
 
 .hero-slider {
@@ -306,12 +351,10 @@ section {
   border-radius: var(--border-radius-base);
   box-shadow: var(--shadow-base);
   overflow: hidden;
-  /* تحديث الـ transition ليشمل الـ transform والـ opacity والـ box-shadow */
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.8s ease;
   cursor: pointer;
 }
 
-/* الحركة عند الهوفر يجب أن تكون منفصلة عن حركة الظهور */
 .course-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
@@ -378,7 +421,6 @@ section {
 /* ======================= قسم الأكثر طلبًا / المتجر ======================= */
 .store-container {
   display: grid;
-  /* عرض 3 كاردات متساوية العرض */
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   max-width: 1200px;
@@ -391,9 +433,8 @@ section {
   box-shadow: var(--shadow-base);
   overflow: hidden;
   padding: 20px;
-  /* تحديث الـ transition ليشمل الـ transform والـ opacity والـ box-shadow */
   transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.8s ease;
-  position: relative; /* للكارد البادج */
+  position: relative;
 }
 
 .product-card:hover {
@@ -401,9 +442,8 @@ section {
   box-shadow: var(--shadow-hover);
 }
 
-/* نمط كارد HOT SALE / المنتج */
 .hot-sale-card {
-  padding: 0; /* لإعطاء البادج والصورة مساحة كاملة */
+  padding: 0;
 }
 
 .hot-sale-card .badge {
@@ -422,10 +462,9 @@ section {
   transform: scale(1.1);
 }
 
-/* Wrapper للسلايدر وأزرار التحكم */
 .product-image-slider-wrapper {
   position: relative;
-  height: 200px; /* ارتفاع الصور */
+  height: 200px;
   overflow: hidden;
   border-radius: var(--border-radius-base) var(--border-radius-base) 0 0;
   margin-bottom: 15px;
@@ -452,10 +491,9 @@ section {
 }
 
 .product-image-slider-wrapper:hover .product-image {
-  transform: scale(1.08); /* تكبير عند Hover */
+  transform: scale(1.08);
 }
 
-/* أزرار السلايدر داخل الكارد */
 .prev-btn,
 .next-btn {
   position: absolute;
@@ -468,7 +506,7 @@ section {
   cursor: pointer;
   z-index: 10;
   border-radius: 50%;
-  opacity: 0; /* إخفاء الأزرار في البداية */
+  opacity: 0;
   transition: opacity 0.3s ease, background-color 0.3s ease;
 }
 
@@ -490,10 +528,9 @@ section {
   left: 10px;
 }
 
-/* محتوى الكارد داخل الهوت سيل */
 .hot-sale-card .card-content {
   padding: 20px;
-  padding-top: 0; /* تم إزالة الـ padding العلوي لأنه أضيف في Wrapper */
+  padding-top: 0;
 }
 
 .product-category {
@@ -555,6 +592,8 @@ section {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .add-to-cart-btn:hover {
@@ -570,7 +609,7 @@ section {
 
 .about-content-wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* تقسيم المحتوى إلى عمودين */
+  grid-template-columns: 1fr 1fr;
   gap: 50px;
   max-width: 1100px;
   margin: 0 auto;
@@ -584,18 +623,16 @@ section {
   box-shadow: var(--shadow-base);
 }
 
-/* التأثير التفاعلي عند الهوفر على الصورة */
 .about-image-container:hover .about-image {
   transform: scale(1.05);
 }
 
-/* إخفاء الصورة في البداية لتفعيل حركة الظهور عليها */
 .about-image {
   width: 100%;
   height: auto;
   display: block;
   transition: transform 0.5s ease;
-  opacity: 0; /* لإخفاءها قبل حركة الظهور */
+  opacity: 0;
 }
 
 .about-description {
@@ -607,7 +644,7 @@ section {
 
 .stats-container {
   display: flex;
-  justify-content: flex-start; /* العدادات من اليمين */
+  justify-content: flex-start;
   gap: 50px;
   flex-wrap: wrap;
   margin-top: 30px;
@@ -635,15 +672,14 @@ section {
   color: white;
   padding: 40px 5%;
   position: relative;
-  overflow: hidden; /* لإخفاء أي جزء من الحركة يخرج عن حدود الفوتر */
+  overflow: hidden;
 }
 
-/* حركة الدخول الأولية للتذييل */
 .animate-footer {
   opacity: 0;
   transform: translateY(20px);
   animation: footerSlideIn 0.8s ease forwards;
-  animation-delay: 0.5s; /* تأخير بسيط للدخول */
+  animation-delay: 0.5s;
 }
 
 @keyframes footerSlideIn {
@@ -703,13 +739,13 @@ section {
 .social-icons a {
   color: white;
   margin-right: 15px;
-  font-size: 24px; /* تكبير الأيقونات */
+  font-size: 24px;
   transition: transform 0.3s ease, color 0.3s ease, rotate 0.3s ease;
 }
 
 .social-icons a:hover {
-  transform: scale(1.3) rotate(360deg); /* دوران كامل وزيادة حجم */
-  color: #ff4500; /* لون جديد عند الهوفر */
+  transform: scale(1.3) rotate(360deg);
+  color: #ff4500;
 }
 
 .copyright {
@@ -823,21 +859,20 @@ section {
   position: relative;
 }
 
-/* تنسيق wrapper للإدخال والإيقونة */
 .input-wrapper {
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 8px;
   transition: all 0.3s ease;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* ظل مبدئي */
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   padding-right: 10px;
 }
 
 .input-wrapper:focus-within {
   border-color: var(--primary-color);
-  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); /* ظل عند التركيز */
-  transform: scale(1.02); /* تأثير 3D بسيط */
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
+  transform: scale(1.02);
 }
 
 .input-icon {
@@ -859,7 +894,7 @@ section {
 }
 
 .form-group input:focus {
-  outline: none; /* إزالة التركيز الافتراضي */
+  outline: none;
 }
 
 .code-help-link {
@@ -880,11 +915,34 @@ section {
   cursor: pointer;
   margin-top: 15px;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .login-submit-btn:hover {
   background-color: var(--primary-dark);
   transform: translateY(-2px);
+}
+
+.login-submit-btn.loading {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.login-submit-btn.loading .btn-text {
+  visibility: hidden;
+}
+
+.login-submit-btn.loading .btn-spinner {
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn-spinner {
+  display: none;
 }
 
 /* ======================= استجابة الشاشة (Responsive Design) ======================= */
@@ -918,7 +976,7 @@ section {
   }
 
   .about-content-wrapper {
-    grid-template-columns: 1fr; /* عمود واحد */
+    grid-template-columns: 1fr;
     text-align: center;
   }
 
@@ -931,8 +989,15 @@ section {
   }
 
   .store-container {
-    /* لعرض كاردين في الصف في الشاشات المتوسطة */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-image-side {
+    display: none;
   }
 }
 
@@ -957,14 +1022,6 @@ section {
     min-width: 40%;
   }
 
-  .modal-body {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-image-side {
-    display: none;
-  }
-
   .footer-content {
     justify-content: center;
     text-align: center;
@@ -986,12 +1043,19 @@ section {
   }
 
   .store-container {
-    /* لعرض كارد واحد في الصف في الشاشات الصغيرة */
     grid-template-columns: 1fr;
+  }
+
+  .logged-in-user {
+    padding: 5px 10px;
+  }
+
+  .user-name {
+    font-size: 12px;
   }
 }
 
-/* ======================= تأثيرات الحركات (Animation Classes) ======================= */
+/* ======================= تأثيرات الحركات ======================= */
 .slideInRight {
   opacity: 0;
   transform: translateX(20px);
@@ -1018,15 +1082,10 @@ section {
   }
 }
 
-/* ---------------------------------------------------- */
-/* حركات الظهور عند التمرير (Scroll Animation) */
-/* ---------------------------------------------------- */
-
-/* الحركة الأساسية لظهور الكاردات (النزول من الأعلى) */
+/* حركات الظهور عند التمرير */
 @keyframes cardSlideIn {
   from {
     opacity: 0;
-    /* يبدأ من الأعلى (سالب) */
     transform: translateY(-50px) scale(0.95);
   }
   to {
@@ -1035,50 +1094,40 @@ section {
   }
 }
 
-/* الحالة المبدئية: إخفاء الكاردات وجعلها مستعدة للحركة */
 .course-card:not(.visible),
 .product-card:not(.visible) {
   opacity: 0;
   transform: translateY(-50px);
 }
 
-/* حالة الظهور: تفعيل الحركة (تُضاف بواسطة JavaScript) */
 .course-card.visible,
 .product-card.visible {
   opacity: 1;
   transform: translateY(0);
   animation-name: cardSlideIn;
   animation-duration: 0.8s;
-  animation-timing-function: cubic-bezier(
-    0.175,
-    0.885,
-    0.32,
-    1.275
-  ); /* حركة نطاطة قليلاً */
+  animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation-fill-mode: both;
 }
 
-/* حركة ظهور صورة من نحن (الصعود من الأسفل) */
 .about-image.animate-from-bottom {
-  opacity: 0; /*Overrides initial opacity: 0; */
-  animation-delay: 0.3s; /* تأخير بسيط بعد ظهور القسم نفسه */
-  /* إعادة استخدام keyframes slideUp من قسم Hero */
+  opacity: 0;
+  animation-delay: 0.3s;
   animation-name: slideUp;
   animation-duration: 1s;
   animation-timing-function: ease;
   animation-fill-mode: both;
 }
 
-/* ======================= تنسيق شاشة التحميل (مؤشر الانتظار) - دون تغيير ======================= */
-
+/* ======================= شاشة التحميل ======================= */
 .loading-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.95); /* خلفية بيضاء شبه شفافة */
-  z-index: 9999; /* يضمن ظهورها فوق جميع العناصر */
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1088,14 +1137,13 @@ section {
   transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
 }
 
-/* فئة الإظهار (يتم إضافتها بواسطة JS) */
 .loading-screen.is-active {
   opacity: 1;
   visibility: visible;
 }
 
 .spinner i {
-  color: var(--primary-color); /* اللون الأزرق */
+  color: var(--primary-color);
   font-size: 50px;
 }
 
@@ -1105,88 +1153,241 @@ section {
   color: var(--text-dark);
 }
 
-/* ======================= تخصيص شريط التمرير (Scrollbar Customization) - حجم كبير ======================= */
-
-/* 1. إعدادات Firefox (مقاس متوسط) */
+/* ======================= تخصيص شريط التمرير ======================= */
 html {
-  scrollbar-width: 16px; /* جعل العرض واضحاً في فايرفوكس */
+  scrollbar-width: 16px;
   scrollbar-color: var(--primary-dark) #f1f1f1;
 }
 
-/* 2. تخصيص شريط التمرير في متصفحات WebKit (Chrome, Safari, Edge) */
-/* تحديد عرض شريط التمرير */
 ::-webkit-scrollbar {
-  width: 16px; /* 💡 التعديل: تم زيادته إلى 16 بكسل ليكون أكبر */
-  height: 16px; /* للعرض الأفقي */
+  width: 16px;
+  height: 16px;
 }
 
-/* 3. تصميم المسار (Track) الذي يتحرك فيه شريط التمرير */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* لون خلفية المسار */
+  background: #f1f1f1;
   border-radius: 10px;
 }
 
-/* 4. تصميم المقبض (Thumb) - الجزء الذي يتم سحبه */
 ::-webkit-scrollbar-thumb {
-  background-color: var(--primary-dark); /* اللون الأزرق الداكن */
-  border-radius: 10px; /* جعل الحواف مستديرة قليلاً */
-  /* جعل الإطار أعرض ليعطي إحساساً بالمربع الثقيل */
+  background-color: var(--primary-dark);
+  border-radius: 10px;
   border: 4px solid #f1f1f1;
 }
 
-/* 5. تصميم المقبض عند التمرير عليه بالماوس (Hover) */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--primary-color); /* لون أفتح عند التفاعل */
+  background-color: var(--primary-color);
 }
 
-/* تنسيقات إضافية للمودال */
-.tab-btn {
-  padding: 10px 20px;
-  border: none;
-  background: #f0f0f0;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* ======================= إشعارات جانبية ======================= */
+.notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
   font-weight: bold;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(400px);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-width: 350px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
-.tab-btn.active {
-  background: var(--primary-color);
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.notification.info {
+  background: linear-gradient(135deg, #007bff, #17a2b8);
+}
+
+.notification i {
+  font-size: 20px;
+}
+
+/* ======================= نافذة تأكيد تسجيل الخروج ======================= */
+.confirm-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10001;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-modal.active {
+  display: flex;
+}
+
+.confirm-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  animation: modalFadeIn 0.3s ease;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.confirm-btn {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.confirm-yes {
+  background: #dc3545;
   color: white;
 }
+
+.confirm-yes:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.confirm-no {
+  background: #6c757d;
+  color: white;
+}
+
+.confirm-no:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ======================= زر التبديل المنزلق ======================= */
+.switch-tabs {
+  display: flex;
+  background: #f0f0f0;
+  border-radius: 30px;
+  padding: 5px;
+  margin-bottom: 25px;
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 25px;
+}
+
+.switch-slider {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: calc(50% - 5px);
+  height: calc(100% - 10px);
+  background: var(--primary-color);
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.switch-btn {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--light-gray);
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.switch-btn.active {
+  color: white;
+}
+
 .tab-content {
   display: none;
 }
+
 .tab-content.active {
   display: block;
 }
 
-#userWelcome {
-  display: none;
-  position: fixed;
-  top: 90px;
-  right: 20px;
-  background: var(--primary-color);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  z-index: 1001;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  animation: slideInRight 0.5s ease;
+/* ======================= أزرار الشراء مع تأثيرات ======================= */
+.product-buy-btn,
+.course-buy-btn {
+  position: relative;
+  overflow: hidden;
 }
 
-.logout-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
-  font-size: 12px;
-  transition: all 0.3s ease;
+.product-buy-btn.loading,
+.course-buy-btn.loading {
+  background-color: #6c757d !important;
+  cursor: not-allowed;
 }
 
-.logout-btn:hover {
-  background: #c82333;
-  transform: scale(1.05);
+.product-buy-btn.loading::after,
+.course-buy-btn.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: loadingShine 1.5s infinite;
+}
+
+@keyframes loadingShine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ======================= زر ابدأ الآن المعدل ======================= */
+.cta-button.registered {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.cta-button.registered:hover {
+  background: linear-gradient(135deg, #218838, #1e9e8a);
 }

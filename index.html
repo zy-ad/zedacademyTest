@@ -38,9 +38,10 @@
           <div id="loggedInUser" class="logged-in-user" style="display: none">
             <div class="user-profile">
               <img
-                src="default-avatar.png"
+                src="11.svg"
                 alt="صورة المستخدم"
                 class="user-avatar"
+                id="currentUserAvatar"
               />
               <span class="user-name" id="displayUserName"></span>
             </div>
@@ -83,6 +84,86 @@
           <button class="confirm-btn confirm-no" onclick="hideLogoutConfirm()">
             لا، إلغاء
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال الإعدادات -->
+    <div id="settingsModal" class="modal settings-modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="document.getElementById('settingsModal').classList.remove('active'); document.body.style.overflow = 'auto'">&times;</span>
+        <div class="settings-content">
+          <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 30px;">
+            <i class="fas fa-cog" style="margin-left: 10px;"></i>
+            إعدادات الحساب
+          </h3>
+          
+          <div class="settings-avatar-section">
+            <img id="avatarPreview" src="11.svg" alt="صورة الحساب" class="avatar-preview">
+            <h4 style="margin-bottom: 15px; color: #666;">اختر صورتك الشخصية</h4>
+            <div class="avatar-options">
+              <img src="11.svg" alt="صورة 11" class="avatar-option">
+              <img src="22.svg" alt="صورة 22" class="avatar-option">
+              <img src="33.svg" alt="صورة 33" class="avatar-option">
+              <img src="44.svg" alt="صورة 44" class="avatar-option">
+              <img src="55.svg" alt="صورة 55" class="avatar-option">
+              <img src="66.svg" alt="صورة 66" class="avatar-option">
+              <img src="77.svg" alt="صورة 77" class="avatar-option">
+              <img src="88.svg" alt="صورة 88" class="avatar-option">
+            </div>
+          </div>
+
+          <form id="settingsForm">
+            <div class="form-group">
+              <label for="settingsFullName">الاسم الكامل</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  id="settingsFullName"
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsPhone">رقم الجوال</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone-alt input-icon"></i>
+                <input
+                  type="tel"
+                  id="settingsPhone"
+                  required
+                  placeholder="مثال: 0555555555"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsEmail">البريد الإلكتروني</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  id="settingsEmail"
+                  required
+                  placeholder="example@email.com"
+                />
+              </div>
+            </div>
+          </form>
+
+          <div class="settings-buttons">
+            <button type="button" class="settings-btn cancel" id="cancelSettings">
+              <i class="fas fa-times" style="margin-left: 8px;"></i>
+              إلغاء
+            </button>
+            <button type="button" class="settings-btn save" id="saveSettings">
+              <i class="fas fa-save" style="margin-left: 8px;"></i>
+              حفظ التغييرات
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ======================= تهيئة Supabase =======================
-  const SUPABASE_URL = "https://ffwgsrffvzbrmbgjxtbf.supabase.co";
+  const SUPABASE_URL = "https://ujbwtefoxgzjdtcrgfhp.supabase.co";
   const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZmd2dzcmZmdnpicm1iZ2p4dGJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3MzE1MjgsImV4cCI6MjA4MTMwNzUyOH0.iv12xp4D2Bp603_PlgcuYN6Kll_Oz9ZdQX0jl6QTWPI";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYnd0ZWZveGd6amR0Y3JnZmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3ODgxMzIsImV4cCI6MjA4MTM2NDEzMn0.p5mLeDn6QCJTiiV_1cx14L_eYaGBRn0BkKsLeh5my30";
 
   const supabase = window.supabase.createClient(
     SUPABASE_URL,
@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   let currentUser = null;
-  let cartItems = [];
   let currentReviewsProduct = null;
 
   // ======================= تهيئة التطبيق =======================
@@ -18,17 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     showLoadingScreen();
 
     try {
-      // تحميل العربة من التخزين المحلي
-      loadCart();
-
       // التحقق من تسجيل الدخول
       await checkAuth();
 
       // اختبار اتصال Supabase
       await testSupabaseConnection();
-
-      // تحديث واجهة العربة
-      updateCartUI();
 
       // تهيئة السلايدر
       initHeroSlider();
@@ -104,52 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingScreen = document.getElementById("loading-screen");
     if (loadingScreen) {
       loadingScreen.classList.remove("is-active");
-    }
-  }
-
-  // ======================= نظام العربة =======================
-  function loadCart() {
-    const savedCart = localStorage.getItem("cart");
-    cartItems = savedCart ? JSON.parse(savedCart) : [];
-  }
-
-  function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }
-
-  function addToCart(item) {
-    // التحقق من وجود المنتج في العربة
-    const existingItemIndex = cartItems.findIndex(
-      (cartItem) => cartItem.id === item.id && cartItem.type === item.type
-    );
-
-    if (existingItemIndex > -1) {
-      // تحديث الكمية إذا كان موجوداً
-      cartItems[existingItemIndex].quantity += item.quantity || 1;
-      showNotification(`تم تحديث كمية ${item.name} في العربة`, "info");
-    } else {
-      // إضافة منتج جديد
-      cartItems.push({
-        ...item,
-        quantity: item.quantity || 1,
-        addedAt: new Date().toISOString(),
-      });
-      showNotification(`تم إضافة ${item.name} إلى العربة`, "success");
-    }
-
-    saveCart();
-    updateCartUI();
-  }
-
-  function updateCartUI() {
-    const cartCount = document.getElementById("cartCount");
-    if (cartCount) {
-      const totalItems = cartItems.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
-      cartCount.textContent = totalItems;
-      cartCount.style.display = totalItems > 0 ? "flex" : "none";
     }
   }
 
@@ -487,45 +434,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ======================= أزرار التبديل =======================
   function initSwitchTabs() {
-    const switchTabs = document.querySelector(".switch-tabs");
-    const switchBtns = document.querySelectorAll(".switch-btn");
+    const loginTabBtn = document.getElementById("loginTabBtn");
+    const registerTabBtn = document.getElementById("registerTabBtn");
     const switchSlider = document.getElementById("switchSlider");
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
 
-    function updateSwitchSlider(tab) {
-      if (!switchTabs || !switchSlider) return;
+    if (!loginTabBtn || !registerTabBtn) return;
 
-      switchTabs.className = `switch-tabs ${tab}-active`;
+    function switchToTab(tab) {
+      // تحديث أزرار التبديل
+      loginTabBtn.classList.toggle("active", tab === "login");
+      registerTabBtn.classList.toggle("active", tab === "register");
 
-      // تحديث الأزرار
-      switchBtns.forEach((btn) => {
-        btn.classList.toggle("active", btn.getAttribute("data-tab") === tab);
-      });
+      // تحريك السلايدر
+      if (switchSlider) {
+        switchSlider.style.transform =
+          tab === "login" ? "translateX(0)" : "translateX(100%)";
+      }
 
       // تبديل النماذج
       if (loginForm && registerForm) {
         if (tab === "login") {
-          loginForm.classList.add("active");
-          registerForm.classList.remove("active");
+          loginForm.style.display = "block";
+          registerForm.style.display = "none";
         } else {
-          registerForm.classList.add("active");
-          loginForm.classList.remove("active");
+          loginForm.style.display = "none";
+          registerForm.style.display = "block";
         }
       }
     }
 
-    if (switchBtns.length > 0) {
-      switchBtns.forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const tab = this.getAttribute("data-tab");
-          updateSwitchSlider(tab);
-        });
-      });
+    // إضافة المستمعين
+    loginTabBtn.addEventListener("click", () => switchToTab("login"));
+    registerTabBtn.addEventListener("click", () => switchToTab("register"));
 
-      // التهيئة الأولية
-      updateSwitchSlider("login");
-    }
+    // التهيئة الأولية
+    switchToTab("login");
   }
 
   // ======================= نظام المراجعات =======================
@@ -639,9 +584,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (saveSettingsBtn) {
       saveSettingsBtn.addEventListener("click", handleSaveSettings);
     }
-
-    // مستمعين لأزرار الشراء
-    document.addEventListener("click", handlePurchase);
   }
 
   // ======================= وظائف المودالات =======================
@@ -662,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ======================= فتح مودال الإعدادات =======================
-  function openSettingsModal() {
+  async function openSettingsModal() {
     if (!currentUser) return;
 
     // تعبئة البيانات
@@ -680,8 +622,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // تحديد الصورة الحالية
     const avatarOptions = document.querySelectorAll(".avatar-option");
     avatarOptions.forEach((option) => {
+      option.classList.remove("selected");
       const avatarSrc = option.getAttribute("data-avatar");
-      option.classList.toggle("selected", avatarSrc === currentUser.avatar);
+      if (avatarSrc === currentUser.avatar) {
+        option.classList.add("selected");
+      }
     });
 
     // إعداد رفع الصورة
@@ -691,51 +636,92 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     if (avatarUpload && avatarUploadContainer) {
-      avatarUploadContainer.addEventListener("click", () =>
-        avatarUpload.click()
+      // إزالة المستمعين القديمين لمنع التكرار
+      const newContainer = avatarUploadContainer.cloneNode(true);
+      avatarUploadContainer.parentNode.replaceChild(
+        newContainer,
+        avatarUploadContainer
       );
 
-      avatarUpload.addEventListener("change", async (e) => {
+      const newUpload = document.getElementById("avatarUpload");
+
+      newContainer.addEventListener("click", () => newUpload.click());
+
+      newUpload.addEventListener("change", async (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (file && file.size < 5 * 1024 * 1024) {
+          // أقل من 5MB
+          if (!file.type.startsWith("image/")) {
+            showNotification("الرجاء رفع صورة فقط!", "error");
+            return;
+          }
+
           try {
+            showLoadingScreen();
+
             // رفع الصورة إلى Supabase Storage
-            const fileName = `${Date.now()}-${file.name}`;
+            const fileExt = file.name.split(".").pop();
+            const fileName = `${currentUser.id}_${Date.now()}.${fileExt}`;
+
             const { data, error } = await supabase.storage
               .from("avatars")
-              .upload(fileName, file);
+              .upload(`public/${fileName}`, file, {
+                cacheControl: "3600",
+                upsert: true,
+              });
 
             if (error) throw error;
 
             // الحصول على رابط الصورة
-            const { data: urlData } = supabase.storage
+            const {
+              data: { publicUrl },
+            } = supabase.storage
               .from("avatars")
-              .getPublicUrl(fileName);
+              .getPublicUrl(`public/${fileName}`);
 
-            if (urlData.publicUrl) {
-              currentUser.avatar = urlData.publicUrl;
-              avatarPreview.src = urlData.publicUrl;
-              showNotification("تم رفع الصورة بنجاح!", "success");
-            }
+            // تحديث المستخدم في قاعدة البيانات
+            const { error: updateError } = await supabase
+              .from("users")
+              .update({ avatar: publicUrl })
+              .eq("id", currentUser.id);
+
+            if (updateError) throw updateError;
+
+            // تحديث بيانات المستخدم الحالي
+            currentUser.avatar = publicUrl;
+            localStorage.setItem("user", JSON.stringify(currentUser));
+
+            // تحديث الصورة في الواجهة
+            avatarPreview.src = publicUrl;
+
+            showNotification("تم رفع وتحديث الصورة بنجاح!", "success");
           } catch (error) {
             console.error("خطأ في رفع الصورة:", error);
-            showNotification(
-              "فشل رفع الصورة، سيتم استخدام التخزين المحلي",
-              "error"
-            );
-
-            // استخدام التخزين المحلي كبديل
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              currentUser.avatar = e.target.result;
-              avatarPreview.src = e.target.result;
-              showNotification("تم حفظ الصورة محلياً", "info");
-            };
-            reader.readAsDataURL(file);
+            showNotification("فشل رفع الصورة!", "error");
+          } finally {
+            hideLoadingScreen();
           }
+        } else {
+          showNotification("حجم الصورة كبير جداً! الحد الأقصى 5MB", "error");
         }
       });
     }
+
+    // إضافة مستمعين للصور المحددة مسبقاً
+    avatarOptions.forEach((option) => {
+      option.addEventListener("click", function () {
+        const avatarSrc = this.getAttribute("data-avatar");
+
+        // إزالة التحديد من الجميع
+        avatarOptions.forEach((opt) => opt.classList.remove("selected"));
+
+        // إضافة التحديد للصورة المختارة
+        this.classList.add("selected");
+
+        // حفظ الصورة المختارة مؤقتاً
+        window.selectedAvatar = avatarSrc;
+      });
+    });
 
     openModal(settingsModal);
   }
@@ -969,32 +955,16 @@ document.addEventListener("DOMContentLoaded", () => {
       submitBtn.disabled = true;
 
       // التحقق من عدم وجود مستخدم بنفس الرقم
-      let userExists = false;
+      const { data: existingUsers, error: checkError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("phone", phone);
 
-      try {
-        const { data: existingUsers, error } = await supabase
-          .from("users")
-          .select("id")
-          .eq("phone", phone);
+      if (checkError) throw checkError;
 
-        if (!error && existingUsers && existingUsers.length > 0) {
-          userExists = true;
-        }
-      } catch (dbError) {
-        console.log("لا يمكن التحقق من قاعدة البيانات:", dbError.message);
-      }
-
-      // التحقق من التخزين المحلي
-      if (!userExists) {
-        const localUsers = JSON.parse(
-          localStorage.getItem("localUsers") || "[]"
-        );
-        userExists = localUsers.some((u) => u.phone === phone);
-      }
-
-      if (userExists) {
+      if (existingUsers && existingUsers.length > 0) {
         showNotification("رقم الجوال مسجل بالفعل! يرجى تسجيل الدخول.", "error");
-        document.querySelector('.switch-btn[data-tab="login"]').click();
+        document.getElementById("loginTabBtn").click();
         document.getElementById("loginPhone").value = phone;
         return;
       }
@@ -1007,43 +977,19 @@ document.addEventListener("DOMContentLoaded", () => {
         password: password,
         security_code: securityCode,
         avatar: "11.svg",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
       };
 
-      let savedToDatabase = false;
-      let dbUser = null;
+      // حفظ المستخدم في Supabase
+      const { data: newUser, error: insertError } = await supabase
+        .from("users")
+        .insert([userData])
+        .select()
+        .single();
 
-      // محاولة الحفظ في Supabase
-      try {
-        const { data, error } = await supabase
-          .from("users")
-          .insert([userData])
-          .select();
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-          savedToDatabase = true;
-          dbUser = data[0];
-          console.log("✅ تم حفظ المستخدم في Supabase");
-        }
-      } catch (dbError) {
-        console.log("⚠️ خطأ في قاعدة البيانات:", dbError.message);
-      }
-
-      // الحفظ في التخزين المحلي
-      const localUser = {
-        id: savedToDatabase ? dbUser.id : `local_${Date.now()}`,
-        ...userData,
-      };
-
-      const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
-      localUsers.push(localUser);
-      localStorage.setItem("localUsers", JSON.stringify(localUsers));
+      if (insertError) throw insertError;
 
       // حفظ المستخدم الحالي
-      currentUser = savedToDatabase ? dbUser : localUser;
+      currentUser = newUser;
       localStorage.setItem("user", JSON.stringify(currentUser));
 
       // تحديث الواجهة
@@ -1058,7 +1004,10 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     } catch (error) {
       console.error("فشل التسجيل:", error);
-      showNotification("حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.", "error");
+      showNotification(
+        error.message || "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+        "error"
+      );
     } finally {
       submitBtn.classList.remove("loading");
       submitBtn.disabled = false;
@@ -1147,9 +1096,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("settingsEmail").value;
     const password = document.getElementById("settingsPassword").value;
     const selectedAvatar =
+      window.selectedAvatar ||
       document
         .querySelector(".avatar-option.selected")
-        ?.getAttribute("data-avatar") || currentUser.avatar;
+        ?.getAttribute("data-avatar") ||
+      currentUser.avatar;
 
     if (!fullName || !phone) {
       showNotification("الاسم ورقم الجوال مطلوبان!", "error");
@@ -1178,17 +1129,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updatedUser.password = password;
       }
 
-      // تحديث في Supabase إن أمكن
-      try {
-        const { error } = await supabase
-          .from("users")
-          .update(updatedUser)
-          .eq("id", currentUser.id);
+      // تحديث في Supabase
+      const { error } = await supabase
+        .from("users")
+        .update(updatedUser)
+        .eq("id", currentUser.id);
 
-        if (error) console.log("⚠️ فشل تحديث قاعدة البيانات:", error.message);
-      } catch (dbError) {
-        console.log("لا يمكن تحديث قاعدة البيانات:", dbError.message);
-      }
+      if (error) throw error;
 
       // تحديث في التخزين المحلي
       const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
@@ -1210,90 +1157,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("فشل تحديث البيانات:", error);
       showNotification("حدث خطأ أثناء تحديث البيانات!", "error");
-    }
-  }
-
-  // ======================= معالجة أزرار الشراء =======================
-  function handlePurchase(e) {
-    // أزرار إضافة إلى العربة
-    if (
-      e.target.classList.contains("add-to-cart-btn") ||
-      e.target.closest(".add-to-cart-btn")
-    ) {
-      e.preventDefault();
-      const button = e.target.classList.contains("add-to-cart-btn")
-        ? e.target
-        : e.target.closest(".add-to-cart-btn");
-      if (!button || button.classList.contains("loading")) return;
-
-      const productCard = button.closest(".product-card");
-      if (!productCard) return;
-
-      const productId = productCard.getAttribute("data-product-id");
-      const productTitle =
-        productCard.querySelector(".product-title")?.textContent;
-      const productPrice = productCard.querySelector(".new-price")?.textContent;
-
-      if (!currentUser) {
-        showNotification("يجب تسجيل الدخول أولاً!", "error");
-        openModal(document.getElementById("loginModal"));
-        return;
-      }
-
-      const item = {
-        id: productId,
-        type: "product",
-        name: productTitle || "منتج",
-        price: productPrice || "0 ر.س",
-        quantity: 1,
-      };
-
-      addToCart(item);
-
-      // تأثير التحميل على الزر
-      button.classList.add("loading");
-      setTimeout(() => button.classList.remove("loading"), 1000);
-    }
-
-    // أزرار حجز الدورة
-    if (
-      e.target.classList.contains("course-buy-btn") ||
-      e.target.closest(".course-buy-btn")
-    ) {
-      e.preventDefault();
-      const button = e.target.classList.contains("course-buy-btn")
-        ? e.target
-        : e.target.closest(".course-buy-btn");
-      if (!button) return;
-
-      const courseCard = button.closest(".course-card");
-      if (!courseCard) return;
-
-      const courseTitle =
-        courseCard.querySelector(".course-title")?.textContent;
-      const coursePrice =
-        courseCard.querySelector(".new-price")?.textContent ||
-        courseCard.querySelector(".course-price")?.textContent;
-
-      if (!currentUser) {
-        showNotification("يجب تسجيل الدخول أولاً!", "error");
-        openModal(document.getElementById("loginModal"));
-        return;
-      }
-
-      const item = {
-        id: `course_${Date.now()}`,
-        type: "course",
-        name: courseTitle || "دورة",
-        price: coursePrice,
-        quantity: 1,
-      };
-
-      addToCart(item);
-
-      // تأثير التحميل على الزر
-      button.classList.add("loading");
-      setTimeout(() => button.classList.remove("loading"), 1000);
     }
   }
 
@@ -1339,30 +1202,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================= تهيئة النظام =======================
   initApp();
   console.log("✅ تم تحميل التطبيق بنجاح!");
-  async function handleRegister(e) {
-    e.preventDefault();
-
-    const fullName = document.getElementById("registerFullName").value;
-    const phone = document.getElementById("registerPhone").value;
-    const email = document.getElementById("registerEmail").value;
-    const password = document.getElementById("registerPassword").value;
-    const securityCode = document.getElementById("registerSecurityCode").value;
-
-    // التحقق من البيانات
-    if (!fullName || !phone || !password || !securityCode) {
-      showNotification("يرجى ملء جميع الحقول المطلوبة!", "error");
-      return;
-    }
-
-    if (securityCode !== "909090") {
-      showNotification("رمز الأمان غير صحيح!", "error");
-      return;
-    }
-
-    const phoneRegex = /^05\d{8}$/;
-    if (!phoneRegex.test(phone)) {
-      showNotification("يرجى إدخال رقم جوال صحيح!", "error");
-      return;
-    }
-  }
 });

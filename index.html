@@ -16,10 +16,18 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
-    <!-- إضافة مكتبة Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
+    <!-- شاشة التحميل -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ التحميل...</p>
+    </div>
+
+    <!-- شريط التنقل -->
     <header class="navbar">
       <div class="navbar-content">
         <a href="index.html" class="logo-link">
@@ -34,37 +42,86 @@
         </nav>
 
         <div class="nav-actions">
-          <!-- عنصر المستخدم بعد تسجيل الدخول -->
-          <div id="loggedInUser" class="logged-in-user" style="display: none">
-            <div class="user-profile">
-              <img
-                src="11.svg"
-                alt="صورة المستخدم"
-                class="user-avatar"
-                id="currentUserAvatar"
-              />
-              <span class="user-name" id="displayUserName"></span>
-            </div>
-            <button class="logout-btn-small" onclick="showLogoutConfirm()">
-              <i class="fas fa-sign-out-alt"></i>
-            </button>
+          <!-- عربة التسوق -->
+          <div class="cart-container">
+            <a href="cart.html" class="cart-icon" id="cartIcon">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-count" id="cartCount">0</span>
+            </a>
           </div>
 
-          <!-- أيقونة المستخدم قبل تسجيل الدخول -->
-          <div class="user-icon-container" id="userIconContainer">
-            <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
+          <!-- قائمة المستخدم (Dropdown) -->
+          <div class="user-dropdown" id="userDropdown">
+            <!-- الحالة قبل التسجيل -->
+            <div id="guestUser" class="guest-user" style="display: none">
+              <div class="user-icon-container">
+                <i
+                  class="fas fa-user-circle user-icon"
+                  id="openLoginModalBtn"
+                ></i>
+              </div>
+            </div>
+
+            <!-- الحالة بعد التسجيل -->
+            <div id="loggedInUser" class="logged-in-user" style="display: none">
+              <div class="user-profile" id="userProfileBtn">
+                <img
+                  src="11.svg"
+                  alt="صورة المستخدم"
+                  class="user-avatar"
+                  id="currentUserAvatar"
+                />
+                <div class="user-info">
+                  <span class="user-name" id="displayUserName">زياد حجاج</span>
+                  <span class="user-status">نشط الآن</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
+
+              <!-- قائمة Dropdown -->
+              <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-header">
+                  <img
+                    src="11.svg"
+                    alt="صورة المستخدم"
+                    class="dropdown-avatar"
+                    id="dropdownAvatar"
+                  />
+                  <div>
+                    <h4 id="dropdownUserName">زياد حجاج</h4>
+                    <p id="dropdownUserEmail">user@example.com</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="profile.html" class="dropdown-item">
+                  <i class="fas fa-user"></i>
+                  <span>الملف الشخصي</span>
+                </a>
+                <a href="#" class="dropdown-item" id="openSettingsModalBtn">
+                  <i class="fas fa-cog"></i>
+                  <span>الإعدادات</span>
+                </a>
+                <a href="purchases.html" class="dropdown-item">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>طلباتي</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a
+                  href="#"
+                  class="dropdown-item logout-item"
+                  onclick="showLogoutConfirm()"
+                >
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>تسجيل الخروج</span>
+                </a>
+              </div>
+            </div>
           </div>
 
           <a href="store.html" class="cta-button" id="ctaButton">ابدأ الآن</a>
         </div>
       </div>
     </header>
-
-    <!-- إشعارات جانبية -->
-    <div id="notification" class="notification">
-      <i class="fas fa-check-circle"></i>
-      <span class="notification-text"></span>
-    </div>
 
     <!-- نافذة تأكيد تسجيل الخروج -->
     <div id="logoutConfirmModal" class="confirm-modal">
@@ -91,25 +148,89 @@
     <!-- مودال الإعدادات -->
     <div id="settingsModal" class="modal settings-modal">
       <div class="modal-content">
-        <span class="close-btn" onclick="document.getElementById('settingsModal').classList.remove('active'); document.body.style.overflow = 'auto'">&times;</span>
+        <span class="close-btn" onclick="closeSettingsModal()">&times;</span>
         <div class="settings-content">
-          <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 30px;">
-            <i class="fas fa-cog" style="margin-left: 10px;"></i>
+          <h3
+            style="
+              text-align: center;
+              color: var(--primary-color);
+              margin-bottom: 30px;
+            "
+          >
+            <i class="fas fa-cog" style="margin-left: 10px"></i>
             إعدادات الحساب
           </h3>
-          
+
           <div class="settings-avatar-section">
-            <img id="avatarPreview" src="11.svg" alt="صورة الحساب" class="avatar-preview">
-            <h4 style="margin-bottom: 15px; color: #666;">اختر صورتك الشخصية</h4>
+            <div class="avatar-upload-container">
+              <img
+                id="avatarPreview"
+                src="11.svg"
+                alt="صورة الحساب"
+                class="avatar-preview"
+              />
+              <div class="avatar-upload-overlay">
+                <i class="fas fa-camera"></i>
+                <span>تغيير الصورة</span>
+              </div>
+              <input
+                type="file"
+                id="avatarUpload"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+
+            <h4 style="margin-bottom: 15px; color: #666">اختر صورتك الشخصية</h4>
             <div class="avatar-options">
-              <img src="11.svg" alt="صورة 11" class="avatar-option">
-              <img src="22.svg" alt="صورة 22" class="avatar-option">
-              <img src="33.svg" alt="صورة 33" class="avatar-option">
-              <img src="44.svg" alt="صورة 44" class="avatar-option">
-              <img src="55.svg" alt="صورة 55" class="avatar-option">
-              <img src="66.svg" alt="صورة 66" class="avatar-option">
-              <img src="77.svg" alt="صورة 77" class="avatar-option">
-              <img src="88.svg" alt="صورة 88" class="avatar-option">
+              <img
+                src="11.svg"
+                alt="صورة 11"
+                class="avatar-option"
+                data-avatar="11.svg"
+              />
+              <img
+                src="22.svg"
+                alt="صورة 22"
+                class="avatar-option"
+                data-avatar="22.svg"
+              />
+              <img
+                src="33.svg"
+                alt="صورة 33"
+                class="avatar-option"
+                data-avatar="33.svg"
+              />
+              <img
+                src="44.svg"
+                alt="صورة 44"
+                class="avatar-option"
+                data-avatar="44.svg"
+              />
+              <img
+                src="55.svg"
+                alt="صورة 55"
+                class="avatar-option"
+                data-avatar="55.svg"
+              />
+              <img
+                src="66.svg"
+                alt="صورة 66"
+                class="avatar-option"
+                data-avatar="66.svg"
+              />
+              <img
+                src="77.svg"
+                alt="صورة 77"
+                class="avatar-option"
+                data-avatar="77.svg"
+              />
+              <img
+                src="88.svg"
+                alt="صورة 88"
+                class="avatar-option"
+                data-avatar="88.svg"
+              />
             </div>
           </div>
 
@@ -152,20 +273,273 @@
                 />
               </div>
             </div>
+
+            <div class="form-group">
+              <label for="settingsPassword">كلمة المرور</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock input-icon"></i>
+                <input
+                  type="password"
+                  id="settingsPassword"
+                  placeholder="اتركها فارغة إذا لم ترد التغيير"
+                />
+              </div>
+            </div>
           </form>
 
           <div class="settings-buttons">
-            <button type="button" class="settings-btn cancel" id="cancelSettings">
-              <i class="fas fa-times" style="margin-left: 8px;"></i>
+            <button
+              type="button"
+              class="settings-btn cancel"
+              onclick="closeSettingsModal()"
+            >
+              <i class="fas fa-times" style="margin-left: 8px"></i>
               إلغاء
             </button>
-            <button type="button" class="settings-btn save" id="saveSettings">
-              <i class="fas fa-save" style="margin-left: 8px;"></i>
+            <button
+              type="button"
+              class="settings-btn save"
+              id="saveSettingsBtn"
+            >
+              <i class="fas fa-save" style="margin-left: 8px"></i>
               حفظ التغييرات
             </button>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- مودال مراجعات المنتج -->
+    <div id="reviewsModal" class="modal reviews-modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeReviewsModal()">&times;</span>
+        <div class="reviews-content">
+          <h3
+            style="
+              text-align: center;
+              color: var(--primary-color);
+              margin-bottom: 20px;
+            "
+          >
+            <i class="fas fa-star" style="margin-left: 10px"></i>
+            مراجعات المنتج
+          </h3>
+          <h4
+            id="reviewsProductTitle"
+            style="text-align: center; margin-bottom: 30px; color: #666"
+          ></h4>
+
+          <!-- قسم كتابة مراجعة جديدة -->
+          <div
+            class="write-review-section"
+            id="writeReviewSection"
+            style="display: none"
+          >
+            <h5><i class="fas fa-edit"></i> اكتب مراجعتك</h5>
+            <div class="rating-input">
+              <span>تقييمك:</span>
+              <div class="stars-input">
+                <i class="far fa-star" data-rating="1"></i>
+                <i class="far fa-star" data-rating="2"></i>
+                <i class="far fa-star" data-rating="3"></i>
+                <i class="far fa-star" data-rating="4"></i>
+                <i class="far fa-star" data-rating="5"></i>
+              </div>
+              <span id="selectedRating">0</span>
+            </div>
+            <div class="form-group">
+              <textarea
+                id="reviewText"
+                placeholder="اكتب مراجعتك هنا..."
+                rows="4"
+              ></textarea>
+            </div>
+            <button class="submit-review-btn" id="submitReviewBtn">
+              <i class="fas fa-paper-plane"></i> نشر المراجعة
+            </button>
+          </div>
+
+          <!-- قائمة المراجعات -->
+          <div class="reviews-list" id="reviewsList">
+            <!-- المراجعات ستظهر هنا ديناميكيًا -->
+          </div>
+
+          <div
+            class="no-reviews"
+            id="noReviewsMessage"
+            style="text-align: center; padding: 30px; color: #888"
+          >
+            <i
+              class="far fa-comment-alt"
+              style="font-size: 40px; margin-bottom: 15px"
+            ></i>
+            <p>لا توجد مراجعات لهذا المنتج بعد. كن أول من يكتب مراجعة!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال التسجيل والتسجيل الدخول -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-body">
+          <div class="modal-image-side">
+            <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
+          </div>
+          <div class="modal-form-side">
+            <!-- مفتاح التبديل المنزلق -->
+            <div class="switch-tabs">
+              <div class="switch-slider" id="switchSlider"></div>
+              <button type="button" class="switch-btn active" data-tab="login">
+                تسجيل الدخول
+              </button>
+              <button type="button" class="switch-btn" data-tab="register">
+                تسجيل جديد
+              </button>
+            </div>
+
+            <!-- نموذج تسجيل الدخول -->
+            <div id="loginForm" class="tab-content active">
+              <h3>تسجيل الدخول</h3>
+              <form id="loginFormElement">
+                <div class="form-group">
+                  <label for="loginPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="loginPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginPassword"
+                      required
+                      placeholder="أدخل كلمة المرور"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="loginSubmitBtn"
+                >
+                  <span class="btn-text">تسجيل الدخول</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- نموذج التسجيل الجديد -->
+            <div id="registerForm" class="tab-content">
+              <h3>إنشاء حساب جديد</h3>
+              <form id="registerFormElement">
+                <div class="form-group">
+                  <label for="registerFullName">الاسم الكامل</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input
+                      type="text"
+                      id="registerFullName"
+                      required
+                      placeholder="أدخل اسمك الكامل"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="registerPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerEmail">البريد الإلكتروني</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input
+                      type="email"
+                      id="registerEmail"
+                      required
+                      placeholder="example@email.com"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerPassword"
+                      required
+                      placeholder="أدخل كلمة مرور قوية"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                  <small style="color: #666; display: block; margin-top: 5px">
+                    رمز الأمان ستحصل عليه من الإدارة
+                  </small>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="registerSubmitBtn"
+                >
+                  <span class="btn-text">إنشاء حساب</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- إشعارات جانبية -->
+    <div id="notification" class="notification">
+      <i class="fas fa-check-circle"></i>
+      <span class="notification-text"></span>
     </div>
 
     <main>
@@ -234,18 +608,37 @@
             <div class="card-content">
               <h3 class="course-title">هنا اسم دورة قابلة للحجز1</h3>
               <div class="course-meta">
-                <span><i class="far fa-clock"></i>مدة الدورة </span>
-                <span><i class="far fa-heart"></i>عدد الإعجابات</span>
-                <span><i class="fas fa-user-tie"></i> شارح الدورة</span>
+                <span><i class="far fa-clock"></i> 12 ساعة</span>
+                <span><i class="far fa-heart"></i> 245 إعجاب</span>
+                <span><i class="fas fa-user-tie"></i> زياد حجاج</span>
+              </div>
+              <div class="course-price">
+                <span class="old-price">200 ر.س</span>
+                <span class="new-price">149 ر.س</span>
               </div>
               <p class="course-description">
-                هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
+                هنا يكتب الوصف الكامل لهذه الدورة لحاجزها، يتضمن كل التفاصيل
+                المهمة
               </p>
-              <a href="دفع.html" class="explore-btn course-buy-btn"
-                >حجز الدورة</a
-              >
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star-half-alt gold"></i>
+                  <span class="rating-text">(4.5)</span>
+                </div>
+                <span class="students-count"
+                  ><i class="fas fa-users"></i> 120 طالب</span
+                >
+              </div>
+              <button class="explore-btn course-buy-btn">
+                <i class="fas fa-shopping-cart"></i> حجز الدورة
+              </button>
             </div>
           </div>
+
           <div class="course-card">
             <div class="course-image-container">
               <img
@@ -257,18 +650,36 @@
             <div class="card-content">
               <h3 class="course-title">هنا اسم دورة قابلة للحجز2</h3>
               <div class="course-meta">
-                <span><i class="far fa-clock"></i>مدة الدورة </span>
-                <span><i class="far fa-heart"></i>عدد الإعجابات</span>
-                <span><i class="fas fa-user-tie"></i> شارح الدورة</span>
+                <span><i class="far fa-clock"></i> 8 ساعات</span>
+                <span><i class="far fa-heart"></i> 189 إعجاب</span>
+                <span><i class="fas fa-user-tie"></i> أحمد محمد</span>
+              </div>
+              <div class="course-price">
+                <span class="old-price">150 ر.س</span>
+                <span class="new-price">99 ر.س</span>
               </div>
               <p class="course-description">
-                هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
+                دورة متخصصة في تصميم الواجهات مع أحدث التقنيات وأفضل الممارسات
               </p>
-              <a href="دفع.html" class="explore-btn course-buy-btn"
-                >حجز الدورة</a
-              >
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="far fa-star gold"></i>
+                  <span class="rating-text">(4.0)</span>
+                </div>
+                <span class="students-count"
+                  ><i class="fas fa-users"></i> 85 طالب</span
+                >
+              </div>
+              <button class="explore-btn course-buy-btn">
+                <i class="fas fa-shopping-cart"></i> حجز الدورة
+              </button>
             </div>
           </div>
+
           <div class="course-card">
             <div class="course-image-container">
               <img
@@ -280,16 +691,76 @@
             <div class="card-content">
               <h3 class="course-title">هنا اسم دورة قابلة للحجز3</h3>
               <div class="course-meta">
-                <span><i class="far fa-clock"></i>مدة الدورة </span>
-                <span><i class="far fa-heart"></i>عدد الإعجابات</span>
-                <span><i class="fas fa-user-tie"></i> شارح الدورة</span>
+                <span><i class="far fa-clock"></i> 15 ساعة</span>
+                <span><i class="far fa-heart"></i> 312 إعجاب</span>
+                <span><i class="fas fa-user-tie"></i> سارة علي</span>
+              </div>
+              <div class="course-price">
+                <span class="old-price">250 ر.س</span>
+                <span class="new-price">199 ر.س</span>
               </div>
               <p class="course-description">
-                هنا يكتب الوصف الهنا يكتب الوصف الكامل لهذه الدورة لحاجزها
+                تعلم أساسيات التسويق الرقمي وكيفية بناء استراتيجيات ناجحة
+                للمنتجات
               </p>
-              <a href="دفع.html" class="explore-btn course-buy-btn"
-                >حجز الدورة</a
-              >
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <span class="rating-text">(5.0)</span>
+                </div>
+                <span class="students-count"
+                  ><i class="fas fa-users"></i> 210 طالب</span
+                >
+              </div>
+              <button class="explore-btn course-buy-btn">
+                <i class="fas fa-shopping-cart"></i> حجز الدورة
+              </button>
+            </div>
+          </div>
+
+          <div class="course-card">
+            <div class="course-image-container">
+              <img
+                src="course1.svg"
+                alt="صورة دورة التطوير"
+                class="course-image"
+              />
+            </div>
+            <div class="card-content">
+              <h3 class="course-title">هنا اسم دورة قابلة للحجز4</h3>
+              <div class="course-meta">
+                <span><i class="far fa-clock"></i> 20 ساعة</span>
+                <span><i class="far fa-heart"></i> 421 إعجاب</span>
+                <span><i class="fas fa-user-tie"></i> محمد حسن</span>
+              </div>
+              <div class="course-price">
+                <span class="old-price">300 ر.س</span>
+                <span class="new-price">249 ر.س</span>
+              </div>
+              <p class="course-description">
+                دورة تطوير تطبيقات الويب باستخدام أحدث التقنيات والمكتبات
+                الحديثة
+              </p>
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star-half-alt gold"></i>
+                  <span class="rating-text">(4.5)</span>
+                </div>
+                <span class="students-count"
+                  ><i class="fas fa-users"></i> 156 طالب</span
+                >
+              </div>
+              <button class="explore-btn course-buy-btn">
+                <i class="fas fa-shopping-cart"></i> حجز الدورة
+              </button>
             </div>
           </div>
         </div>
@@ -343,21 +814,33 @@
                 <span class="old-price">25 ر.س</span>
                 <span class="new-price">15.99 ر.س</span>
               </div>
-              <div class="rating">
-                <i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="fas fa-star-half-alt gold"></i>
-                <span class="reviews">(18 مراجعة)</span>
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star-half-alt gold"></i>
+                  <span class="rating-text">(4.5)</span>
+                </div>
+                <button class="reviews-btn">
+                  <i class="far fa-comment"></i> 18 مراجعة
+                </button>
               </div>
               <div class="stock-status">
                 <i class="fas fa-cubes"></i> متوفر | دومين مخصص
               </div>
-              <button
-                class="add-to-cart-btn product-buy-btn"
-                data-product="prodA"
-              >
-                <i class="fas fa-cart-plus"></i> شراء الآن
-              </button>
+              <div class="product-actions">
+                <button class="details-btn">
+                  <i class="fas fa-info-circle"></i> تفاصيل
+                </button>
+                <button
+                  class="add-to-cart-btn product-buy-btn"
+                  data-product="prodA"
+                >
+                  <i class="fas fa-cart-plus"></i> شراء الآن
+                </button>
+              </div>
             </div>
           </div>
 
@@ -404,90 +887,110 @@
                 <span class="old-price">70 ر.س</span>
                 <span class="new-price">64.99 ر.س</span>
               </div>
-              <div class="rating">
-                <i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="fas fa-star gold"></i>
-                <span class="reviews">(30 مراجعة)</span>
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <span class="rating-text">(5.0)</span>
+                </div>
+                <button class="reviews-btn">
+                  <i class="far fa-comment"></i> 30 مراجعة
+                </button>
               </div>
               <div class="stock-status">
                 <i class="fas fa-cubes"></i> متوفر | دومين مخصص
               </div>
-              <button
-                class="add-to-cart-btn product-buy-btn"
-                data-product="prodB"
-              >
-                <i class="fas fa-cart-plus"></i> شراء الآن
-              </button>
+              <div class="product-actions">
+                <button class="details-btn">
+                  <i class="fas fa-info-circle"></i> تفاصيل
+                </button>
+                <button
+                  class="add-to-cart-btn product-buy-btn"
+                  data-product="prodB"
+                >
+                  <i class="fas fa-cart-plus"></i> شراء الآن
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="product-card hot-sale-card" data-product-id="prodC">
+          <div class="product-card hot-sale-card" data-product-id="prodD">
             <span
               class="badge"
-              style="background: linear-gradient(45deg, #17a2b8, #20c997)"
-              >عرض محدود</span
+              style="background: linear-gradient(45deg, #28a745, #20c997)"
+              >الأفضل مبيعاً</span
             >
             <div class="product-image-slider-wrapper">
-              <div class="product-image-slider" data-product-id="prodC">
+              <div class="product-image-slider" data-product-id="prodD">
                 <img
-                  src="hero3.png"
-                  alt="صورة المنتج 3-1"
+                  src="course1.svg"
+                  alt="صورة المنتج 4-1"
                   class="product-image active"
                 />
                 <img
-                  src="hero2.png"
-                  alt="صورة المنتج 3-2"
+                  src="hero2.svg"
+                  alt="صورة المنتج 4-2"
                   class="product-image"
                 />
                 <img
-                  src="hero1.jpg"
-                  alt="صورة المنتج 3-2"
+                  src="hero3.svg"
+                  alt="صورة المنتج 4-3"
                   class="product-image"
                 />
               </div>
-              <button class="prev-btn" data-product-id="prodC">
+              <button class="prev-btn" data-product-id="prodD">
                 <i class="fas fa-chevron-right"></i>
               </button>
-              <button class="next-btn" data-product-id="prodC">
+              <button class="next-btn" data-product-id="prodD">
                 <i class="fas fa-chevron-left"></i>
               </button>
             </div>
             <div class="card-content">
-              <span class="product-category">قوالب ويب</span>
-              <h3 class="product-title">قالب ووردبريس احترافي للمتاجر</h3>
+              <span class="product-category">أنظمة إدارة</span>
+              <h3 class="product-title">نظام إدارة العملاء CRM</h3>
               <p class="product-description">
-                قالب متجاوب وسريع، مصمم خصيصاً للمتاجر الإلكترونية التي تستهدف
-                الجمهور العربي.
+                نظام متكامل لإدارة العملاء والمبيعات مع لوحة تحكم احترافية
+                وتقارير تفصيلية
               </p>
               <ul class="spec-list">
-                <li><i class="fas fa-check-circle"></i> يدعم WooCommerce</li>
-                <li>
-                  <i class="fas fa-check-circle"></i> متجاوب 100% (Mobile Ready)
-                </li>
-                <li>
-                  <i class="fas fa-check-circle"></i> تحديثات مجانية مدى الحياة
-                </li>
+                <li><i class="fas fa-check-circle"></i> لوحة تحكم عربية</li>
+                <li><i class="fas fa-check-circle"></i> تقارير مفصلة</li>
+                <li><i class="fas fa-check-circle"></i> دعم فني مجاني</li>
               </ul>
               <div class="price-info">
-                <span class="old-price">350 ر.س</span>
-                <span class="new-price">200 ر.س</span>
+                <span class="old-price">500 ر.س</span>
+                <span class="new-price">349 ر.س</span>
               </div>
-              <div class="rating">
-                <i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="fas fa-star gold"></i><i class="fas fa-star gold"></i
-                ><i class="far fa-star gold"></i>
-                <span class="reviews">(30 مراجعة)</span>
+              <div class="rating-section">
+                <div class="stars">
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star gold"></i>
+                  <i class="fas fa-star-half-alt gold"></i>
+                  <span class="rating-text">(4.5)</span>
+                </div>
+                <button class="reviews-btn">
+                  <i class="far fa-comment"></i> 42 مراجعة
+                </button>
               </div>
               <div class="stock-status">
-                <i class="fas fa-cubes"></i> متوفر | شراء لمرة واحدة
+                <i class="fas fa-cubes"></i> متوفر | ترخيص سنوي
               </div>
-              <button
-                class="add-to-cart-btn product-buy-btn"
-                data-product="prodC"
-              >
-                <i class="fas fa-cart-plus"></i> شراء الآن
-              </button>
+              <div class="product-actions">
+                <button class="details-btn">
+                  <i class="fas fa-info-circle"></i> تفاصيل
+                </button>
+                <button
+                  class="add-to-cart-btn product-buy-btn"
+                  data-product="prodD"
+                >
+                  <i class="fas fa-cart-plus"></i> شراء الآن
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -523,6 +1026,10 @@
                 <div class="counter" data-target="500">0</div>
                 <p class="stat-title">مشروع منجز</p>
               </div>
+              <div class="stat-item">
+                <div class="counter" data-target="98">0</div>
+                <p class="stat-title">% رضا العملاء</p>
+              </div>
             </div>
           </div>
         </div>
@@ -540,6 +1047,8 @@
           <a href="courses.html">الدورات</a>
           <a href="summaries.html">الملخصات</a>
           <a href="store.html">المتجر</a>
+          <a href="about.html">من نحن</a>
+          <a href="contact.html">اتصل بنا</a>
         </div>
 
         <div class="social-icons">
@@ -547,156 +1056,15 @@
           <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
           <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
           <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
 
       <div class="copyright">
-        &copy;جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
+        &copy; جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
       </div>
     </footer>
 
-    <!-- مودال التسجيل والتسجيل الدخول -->
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <div class="modal-body">
-          <div class="modal-image-side">
-            <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
-          </div>
-          <div class="modal-form-side">
-            <!-- مفتاح التبديل المنزلق -->
-            <div class="switch-tabs">
-              <div class="switch-slider" id="switchSlider"></div>
-              <button type="button" class="switch-btn active" data-tab="login">
-                تسجيل الدخول
-              </button>
-              <button type="button" class="switch-btn" data-tab="register">
-                تسجيل جديد
-              </button>
-            </div>
-
-            <!-- نموذج تسجيل الدخول -->
-            <div id="loginForm" class="tab-content active">
-              <h3>تسجيل الدخول</h3>
-              <form id="loginFormElement">
-                <div class="form-group">
-                  <label for="loginPhone">رقم الجوال</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-phone-alt input-icon"></i>
-                    <input
-                      type="tel"
-                      id="loginPhone"
-                      required
-                      placeholder="مثال: 0555555555"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="loginSecurityCode">رمز الأمان</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input
-                      type="password"
-                      id="loginSecurityCode"
-                      required
-                      placeholder="909090"
-                    />
-                  </div>
-                  <a href="#" class="code-help-link"
-                    >رمز الأمان الافتراضي هو 909090</a
-                  >
-                </div>
-                <button
-                  type="submit"
-                  class="login-submit-btn"
-                  id="loginSubmitBtn"
-                >
-                  <span class="btn-text">تسجيل الدخول</span>
-                  <span class="btn-spinner" style="display: none">
-                    <i class="fas fa-spinner fa-spin"></i>
-                  </span>
-                </button>
-              </form>
-            </div>
-
-            <!-- نموذج التسجيل الجديد -->
-            <div id="registerForm" class="tab-content">
-              <h3>إنشاء حساب جديد</h3>
-              <form id="registerFormElement">
-                <div class="form-group">
-                  <label for="registerFullName">الاسم الكامل</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-user input-icon"></i>
-                    <input
-                      type="text"
-                      id="registerFullName"
-                      required
-                      placeholder="أدخل اسمك الكامل"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerPhone">رقم الجوال</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-phone-alt input-icon"></i>
-                    <input
-                      type="tel"
-                      id="registerPhone"
-                      required
-                      placeholder="مثال: 0555555555"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerEmail">البريد الإلكتروني</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input
-                      type="email"
-                      id="registerEmail"
-                      required
-                      placeholder="example@email.com"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerSecurityCode">رمز الأمان</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input
-                      type="password"
-                      id="registerSecurityCode"
-                      required
-                      placeholder="909090"
-                    />
-                  </div>
-                  <a href="#" class="code-help-link"
-                    >رمز الأمان الافتراضي هو 909090</a
-                  >
-                </div>
-                <button
-                  type="submit"
-                  class="login-submit-btn"
-                  id="registerSubmitBtn"
-                >
-                  <span class="btn-text">إنشاء حساب</span>
-                  <span class="btn-spinner" style="display: none">
-                    <i class="fas fa-spinner fa-spin"></i>
-                  </span>
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="loading-screen" class="loading-screen">
-      <div class="spinner">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-      </div>
-      <p>جارٍ الانتقال...</p>
-    </div>
     <script src="index.js"></script>
   </body>
 </html>

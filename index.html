@@ -371,172 +371,166 @@
       </div>
     </div>
 
-    <!-- مودال التسجيل والتسجيل الدخول -->
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <div class="modal-body">
-          <div class="modal-image-side">
-            <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
-          </div>
-          <div class="modal-form-side">
-            <!-- مفتاح التبديل المنزلق -->
-            <div class="switch-tabs" id="switchTabs">
-              <div class="switch-slider" id="switchSlider"></div>
-              <button
-                type="button"
-                class="switch-btn active"
-                id="loginTabBtn"
-                data-tab="login"
-              >
-                تسجيل الدخول
-              </button>
-              <button
-                type="button"
-                class="switch-btn"
-                id="registerTabBtn"
-                data-tab="register"
-              >
-                تسجيل جديد
-              </button>
-            </div>
+    <!-- مودال التسجيل والتسجيل الدخول --><!-- مودال التسجيل والتسجيل الدخول -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <div class="modal-body">
+      <div class="modal-image-side">
+        <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
+      </div>
+      <div class="modal-form-side">
+        <!-- أزرار التبديل -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button 
+            id="showLoginBtn" 
+            class="switch-btn active"
+            style="flex: 1; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            تسجيل الدخول
+          </button>
+          <button 
+            id="showRegisterBtn" 
+            class="switch-btn"
+            style="flex: 1; padding: 12px; background: #f0f0f0; color: #666; border: none; border-radius: 8px; cursor: pointer;">
+            تسجيل جديد
+          </button>
+        </div>
 
-            <!-- نموذج تسجيل الدخول -->
-            <div id="loginForm" class="tab-content active">
-              <h3>تسجيل الدخول</h3>
-              <form id="loginFormElement">
-                <div class="form-group">
-                  <label for="loginPhone">رقم الجوال</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-phone-alt input-icon"></i>
-                    <input
-                      type="tel"
-                      id="loginPhone"
-                      required
-                      placeholder="مثال: 0555555555"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="loginPassword">كلمة المرور</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input
-                      type="password"
-                      id="loginPassword"
-                      required
-                      placeholder="أدخل كلمة المرور"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="loginSecurityCode">رمز الأمان</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-shield-alt input-icon"></i>
-                    <input
-                      type="password"
-                      id="loginSecurityCode"
-                      required
-                      placeholder="رمز الأمان السري"
-                    />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  class="login-submit-btn"
-                  id="loginSubmitBtn"
-                >
-                  <span class="btn-text">تسجيل الدخول</span>
-                  <span class="btn-spinner" style="display: none">
-                    <i class="fas fa-spinner fa-spin"></i>
-                  </span>
-                </button>
-              </form>
+        <!-- نموذج تسجيل الدخول -->
+        <div id="loginForm" class="tab-content active">
+          <h3>تسجيل الدخول</h3>
+          <form id="loginFormElement">
+            <div class="form-group">
+              <label for="loginPhone">رقم الجوال</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone-alt input-icon"></i>
+                <input
+                  type="tel"
+                  id="loginPhone"
+                  required
+                  placeholder="مثال: 0555555555"
+                />
+              </div>
             </div>
+            <div class="form-group">
+              <label for="loginPassword">كلمة المرور</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock input-icon"></i>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  required
+                  placeholder="أدخل كلمة المرور"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="loginSecurityCode">رمز الأمان</label>
+              <div class="input-wrapper">
+                <i class="fas fa-shield-alt input-icon"></i>
+                <input
+                  type="password"
+                  id="loginSecurityCode"
+                  required
+                  placeholder="رمز الأمان السري"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              class="login-submit-btn"
+              id="loginSubmitBtn"
+            >
+              <span class="btn-text">تسجيل الدخول</span>
+              <span class="btn-spinner" style="display: none">
+                <i class="fas fa-spinner fa-spin"></i>
+              </span>
+            </button>
+          </form>
+        </div>
 
-            <!-- نموذج التسجيل الجديد -->
-            <div id="registerForm" class="tab-content">
-              <h3>إنشاء حساب جديد</h3>
-              <form id="registerFormElement">
-                <div class="form-group">
-                  <label for="registerFullName">الاسم الكامل</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-user input-icon"></i>
-                    <input
-                      type="text"
-                      id="registerFullName"
-                      required
-                      placeholder="أدخل اسمك الكامل"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerPhone">رقم الجوال</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-phone-alt input-icon"></i>
-                    <input
-                      type="tel"
-                      id="registerPhone"
-                      required
-                      placeholder="مثال: 0555555555"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerEmail">البريد الإلكتروني</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input
-                      type="email"
-                      id="registerEmail"
-                      required
-                      placeholder="example@email.com"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerPassword">كلمة المرور</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input
-                      type="password"
-                      id="registerPassword"
-                      required
-                      placeholder="أدخل كلمة مرور قوية"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="registerSecurityCode">رمز الأمان</label>
-                  <div class="input-wrapper">
-                    <i class="fas fa-shield-alt input-icon"></i>
-                    <input
-                      type="password"
-                      id="registerSecurityCode"
-                      required
-                      placeholder="رمز الأمان السري"
-                    />
-                  </div>
-                  <small style="color: #666; display: block; margin-top: 5px">
-                    رمز الأمان ستحصل عليه من الإدارة
-                  </small>
-                </div>
-                <button
-                  type="submit"
-                  class="login-submit-btn"
-                  id="registerSubmitBtn"
-                >
-                  <span class="btn-text">إنشاء حساب</span>
-                  <span class="btn-spinner" style="display: none">
-                    <i class="fas fa-spinner fa-spin"></i>
-                  </span>
-                </button>
-              </form>
+        <!-- نموذج التسجيل الجديد -->
+        <div id="registerForm" class="tab-content" style="display: none;">
+          <h3>إنشاء حساب جديد</h3>
+          <form id="registerFormElement">
+            <div class="form-group">
+              <label for="registerFullName">الاسم الكامل</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  id="registerFullName"
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
             </div>
-          </div>
+            <div class="form-group">
+              <label for="registerPhone">رقم الجوال</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone-alt input-icon"></i>
+                <input
+                  type="tel"
+                  id="registerPhone"
+                  required
+                  placeholder="مثال: 0555555555"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="registerEmail">البريد الإلكتروني</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  id="registerEmail"
+                  placeholder="example@email.com"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="registerPassword">كلمة المرور</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock input-icon"></i>
+                <input
+                  type="password"
+                  id="registerPassword"
+                  required
+                  placeholder="أدخل كلمة مرور قوية"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="registerSecurityCode">رمز الأمان</label>
+              <div class="input-wrapper">
+                <i class="fas fa-shield-alt input-icon"></i>
+                <input
+                  type="password"
+                  id="registerSecurityCode"
+                  required
+                  placeholder="رمز الأمان السري"
+                />
+              </div>
+              <small style="color: #666; display: block; margin-top: 5px">
+                رمز الأمان ستحصل عليه من الإدارة
+              </small>
+            </div>
+            <button
+              type="submit"
+              class="login-submit-btn"
+              id="registerSubmitBtn"
+            >
+              <span class="btn-text">إنشاء حساب</span>
+              <span class="btn-spinner" style="display: none">
+                <i class="fas fa-spinner fa-spin"></i>
+              </span>
+            </button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- إشعارات جانبية -->
     <div id="notification" class="notification">
@@ -863,7 +857,7 @@
                 <button class="details-btn">
                   <i class="fas fa-info-circle"></i> تفاصيل
                 </button>
-                <button class="product-buy-btn">
+                <button  class="product-buy-btn">
                   <i class="fas fa-heart"></i> حجز المنتج
                 </button>
               </div>

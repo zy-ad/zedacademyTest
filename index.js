@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 بدء تحميل التطبيق...");
+
   // ======================= تهيئة Supabase =======================
   const SUPABASE_URL = "https://ujbwtefoxgzjdtcrgfhp.supabase.co";
   const SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYnd0ZWZveGd6amR0Y3JnZmhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3ODgxMzIsImV4cCI6MjA4MTM2NDEzMn0.p5mLeDn6QCJTiiV_1cx14L_eYaGBRn0BkKsLeh5my30";
 
+  console.log("📡 تهيئة اتصال Supabase...");
   const supabase = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
@@ -14,54 +17,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ======================= تهيئة التطبيق =======================
   async function initApp() {
+    console.log("🔄 بدء تهيئة التطبيق...");
     showLoadingScreen();
 
     try {
-      // التحقق من تسجيل الدخول
-      await checkAuth();
+      console.log("🔐 التحقق من تسجيل الدخول...");
+      const isAuthenticated = await checkAuth();
+      console.log(`✅ حالة المصادقة: ${isAuthenticated ? "مسجل" : "غير مسجل"}`);
 
-      // اختبار اتصال Supabase
+      console.log("📊 اختبار اتصال Supabase...");
       await testSupabaseConnection();
 
-      // تهيئة السلايدر
+      console.log("🎨 تهيئة المكونات...");
       initHeroSlider();
-
-      // تهيئة العدادات
       initCounters();
-
-      // تهيئة سلايدر المنتجات
       initProductSliders();
-
-      // تهيئة حركات الكروت
       initCardAnimations();
-
-      // تهيئة أزرار التبديل
-      initSwitchTabs();
-
-      // تهيئة نظام المراجعات
       initReviewsSystem();
-
-      // تهيئة نظام المودالات
       initModals();
-
-      // تهيئة نظام الانتقال
       initNavigation();
+
+      console.log("✅ تم تهيئة جميع المكونات بنجاح");
     } catch (error) {
-      console.error("خطأ في تهيئة التطبيق:", error);
+      console.error("❌ خطأ في تهيئة التطبيق:", error);
+      showNotification("حدث خطأ في تهيئة التطبيق", "error");
     } finally {
       hideLoadingScreen();
+      console.log("🏁 اكتملت تهيئة التطبيق");
     }
   }
 
   // ======================= نظام الإشعارات =======================
   function showNotification(message, type = "success") {
+    console.log(`📢 إشعار [${type}]: ${message}`);
     const notification = document.getElementById("notification");
     const notificationText = notification.querySelector(".notification-text");
 
     notification.className = `notification ${type}`;
     notificationText.textContent = message;
 
-    // تغيير الأيقونة حسب النوع
     const icon = notification.querySelector("i");
     switch (type) {
       case "success":
@@ -79,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     notification.classList.add("show");
 
-    // إخفاء الإشعار بعد 4 ثواني
     setTimeout(() => {
       notification.classList.remove("show");
     }, 4000);
@@ -89,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showLoadingScreen() {
     const loadingScreen = document.getElementById("loading-screen");
     if (loadingScreen) {
+      console.log("⏳ عرض شاشة التحميل...");
       loadingScreen.classList.add("is-active");
     }
   }
@@ -96,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function hideLoadingScreen() {
     const loadingScreen = document.getElementById("loading-screen");
     if (loadingScreen) {
+      console.log("✅ إخفاء شاشة التحميل...");
       loadingScreen.classList.remove("is-active");
     }
   }
@@ -103,23 +98,65 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================= نظام المستخدم =======================
   async function checkAuth() {
     try {
+      console.log("🔍 فحص تخزين المستخدم المحلي...");
       const storedUser = localStorage.getItem("user");
+
       if (storedUser) {
+        console.log("👤 تم العثور على مستخدم في التخزين المحلي");
         currentUser = JSON.parse(storedUser);
+
+        // التحقق من أن المستخدم له id
+        if (!currentUser.id) {
+          console.warn(
+            "⚠️ المستخدم المخزن محلياً لا يحتوي على ID، سيتم تسجيل الخروج"
+          );
+          updateUIForLoggedOutUser();
+          return false;
+        }
+
+        // محاولة التحقق من قاعدة البيانات
+        try {
+          const { data: userFromDB, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", currentUser.id)
+            .single();
+
+          if (error || !userFromDB) {
+            console.warn(
+              "⚠️ المستخدم غير موجود في قاعدة البيانات، سيتم تسجيل الخروج"
+            );
+            updateUIForLoggedOutUser();
+            return false;
+          }
+
+          // تحديث بيانات المستخدم من قاعدة البيانات
+          currentUser = { ...currentUser, ...userFromDB };
+          localStorage.setItem("user", JSON.stringify(currentUser));
+        } catch (dbError) {
+          console.warn(
+            "⚠️ لا يمكن الاتصال بقاعدة البيانات للتحقق:",
+            dbError.message
+          );
+          // نستمر باستخدام البيانات المحلية
+        }
+
         await updateUIForLoggedInUser();
         return true;
       }
+
+      console.log("👤 لا يوجد مستخدم مسجل");
       updateUIForLoggedOutUser();
       return false;
     } catch (error) {
-      console.error("خطأ في التحقق من المصادقة:", error);
+      console.error("❌ خطأ في التحقق من المصادقة:", error);
       updateUIForLoggedOutUser();
       return false;
     }
   }
 
   async function updateUIForLoggedInUser() {
-    // إظهار Dropdown المستخدم
+    console.log("🎨 تحديث الواجهة للمستخدم المسجل...");
     const guestUser = document.getElementById("guestUser");
     const loggedInUser = document.getElementById("loggedInUser");
     const ctaButton = document.getElementById("ctaButton");
@@ -127,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (guestUser) guestUser.style.display = "none";
     if (loggedInUser) loggedInUser.style.display = "flex";
 
-    // تحديث معلومات المستخدم
     const displayUserName = document.getElementById("displayUserName");
     const dropdownUserName = document.getElementById("dropdownUserName");
     const dropdownUserEmail = document.getElementById("dropdownUserEmail");
@@ -135,6 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownAvatar = document.getElementById("dropdownAvatar");
 
     if (currentUser) {
+      console.log(`👋 تحديث بيانات المستخدم: ${currentUser.full_name}`);
+
       if (displayUserName) displayUserName.textContent = currentUser.full_name;
       if (dropdownUserName)
         dropdownUserName.textContent = currentUser.full_name;
@@ -142,13 +180,11 @@ document.addEventListener("DOMContentLoaded", () => {
         dropdownUserEmail.textContent =
           currentUser.email || currentUser.phone + "@temp.com";
 
-      // تحديث الصورة
       const avatarSrc = currentUser.avatar || "11.svg";
       if (userAvatar) userAvatar.src = avatarSrc;
       if (dropdownAvatar) dropdownAvatar.src = avatarSrc;
     }
 
-    // تحديث زر ابدأ الآن
     if (ctaButton && currentUser) {
       const firstName = currentUser.full_name.split(" ")[0];
       ctaButton.innerHTML = `<i class="fas fa-user-circle" style="margin-left: 8px"></i>مرحباً ${firstName}`;
@@ -160,11 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
-    // إضافة مستمعين لـ Dropdown
     initDropdown();
   }
 
   function updateUIForLoggedOutUser() {
+    console.log("🎨 تحديث الواجهة للمستخدم غير المسجل...");
     const guestUser = document.getElementById("guestUser");
     const loggedInUser = document.getElementById("loggedInUser");
     const ctaButton = document.getElementById("ctaButton");
@@ -188,23 +224,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const userProfileBtn = document.getElementById("userProfileBtn");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    if (!userProfileBtn || !dropdownMenu) return;
+    if (!userProfileBtn || !dropdownMenu) {
+      console.warn("⚠️ عناصر Dropdown غير موجودة");
+      return;
+    }
 
-    // فتح/إغلاق Dropdown
     userProfileBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       const isActive = userProfileBtn.classList.contains("active");
-
-      // إغلاق جميع Dropdowns الأخرى
       closeAllDropdowns();
-
       if (!isActive) {
         userProfileBtn.classList.add("active");
         dropdownMenu.classList.add("active");
+        console.log("📂 فتح قائمة Dropdown");
       }
     });
 
-    // إغلاق Dropdown عند النقر خارجها
     document.addEventListener("click", (e) => {
       if (
         !userProfileBtn.contains(e.target) &&
@@ -214,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // منع إغلاق Dropdown عند النقر داخلها
     dropdownMenu.addEventListener("click", (e) => {
       e.stopPropagation();
     });
@@ -223,17 +257,23 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeAllDropdowns() {
     const userProfileBtn = document.getElementById("userProfileBtn");
     const dropdownMenu = document.getElementById("dropdownMenu");
-
     if (userProfileBtn) userProfileBtn.classList.remove("active");
     if (dropdownMenu) dropdownMenu.classList.remove("active");
   }
 
   // ======================= سلايدر Hero التلقائي =======================
   function initHeroSlider() {
+    console.log("🖼️ تهيئة سلايدر Hero...");
     const heroSliderImages = document.querySelectorAll(
       ".hero-slider .slider-image"
     );
     const heroSliderDots = document.querySelectorAll(".hero-slider .dot");
+
+    if (heroSliderImages.length === 0) {
+      console.warn("⚠️ لا توجد صور في سلايدر Hero");
+      return;
+    }
+
     let currentSlide = 0;
     const slideInterval = 5000;
 
@@ -261,13 +301,22 @@ document.addEventListener("DOMContentLoaded", () => {
         heroSlideTimer = setInterval(nextHeroSlide, slideInterval);
       });
     });
+
+    console.log(`✅ تم تهيئة سلايدر Hero مع ${heroSliderImages.length} صور`);
   }
 
   // ======================= العدادات المتحركة =======================
   function initCounters() {
+    console.log("🔢 تهيئة العدادات...");
     const counters = document.querySelectorAll(".counter");
     const aboutSection = document.getElementById("about");
     const aboutImage = document.querySelector(".about-image");
+
+    if (counters.length === 0) {
+      console.warn("⚠️ لا توجد عدادات للتهيئة");
+      return;
+    }
+
     let hasAnimated = false;
 
     function animateCounter(counter) {
@@ -296,6 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (!hasAnimated) {
+              console.log("🎬 تشغيل حركة العدادات...");
               counters.forEach(animateCounter);
               if (aboutImage) {
                 aboutImage.style.opacity = 1;
@@ -312,21 +362,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (aboutSection) {
       aboutObserver.observe(aboutSection);
+      console.log("👀 مراقبة قسم about للعدادات");
     }
   }
 
   // ======================= سلايدر صور المنتجات =======================
   function initProductSliders() {
+    console.log("🖼️ تهيئة سلايدر المنتجات...");
     const productCards = document.querySelectorAll(
       ".product-card[data-product-id]"
     );
+
+    if (productCards.length === 0) {
+      console.warn("⚠️ لا توجد بطاقات منتجات للتهيئة");
+      return;
+    }
 
     function showProductSlide(productId, step) {
       const sliderWrapper = document.querySelector(
         `.product-image-slider[data-product-id="${productId}"]`
       );
-      const images = sliderWrapper.querySelectorAll(".product-image");
 
+      if (!sliderWrapper) {
+        console.warn(`⚠️ لم يتم العثور على سلايدر للمنتج ${productId}`);
+        return;
+      }
+
+      const images = sliderWrapper.querySelectorAll(".product-image");
       let currentIndex = 0;
 
       images.forEach((img, index) => {
@@ -365,13 +427,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     });
+
+    console.log(`✅ تم تهيئة سلايدرات ${productCards.length} منتج`);
   }
 
   // ======================= حركات ظهور الكروت =======================
   function initCardAnimations() {
+    console.log("🎭 تهيئة حركات الكروت...");
     const cardsToAnimate = document.querySelectorAll(
       ".course-card, .product-card"
     );
+
+    if (cardsToAnimate.length === 0) {
+      console.warn("⚠️ لا توجد كروت للتحريك");
+      return;
+    }
 
     const cardObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -399,12 +469,20 @@ document.addEventListener("DOMContentLoaded", () => {
       card.setAttribute("data-delay", delay);
       cardObserver.observe(card);
     });
+
+    console.log(`✅ تم تهيئة حركات ${cardsToAnimate.length} كرت`);
   }
 
   // ======================= نظام الانتقال =======================
   function initNavigation() {
+    console.log("🧭 تهيئة نظام الانتقال...");
     const loadingScreen = document.getElementById("loading-screen");
     const navLinks = document.querySelectorAll(".nav-links a.nav-item");
+
+    if (navLinks.length === 0) {
+      console.warn("⚠️ لا توجد روابط تنقل للتهيئة");
+      return;
+    }
 
     navLinks.forEach((link) => {
       link.addEventListener("click", function (e) {
@@ -415,7 +493,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         e.preventDefault();
         const targetUrl = this.href;
-        loadingScreen.classList.add("is-active");
+        console.log(`➡️ الانتقال إلى: ${targetUrl}`);
+
+        if (loadingScreen) {
+          loadingScreen.classList.add("is-active");
+        }
 
         setTimeout(() => {
           window.location.href = targetUrl;
@@ -432,49 +514,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ======================= أزرار التبديل =======================
-  function initSwitchTabs() {
-    const loginTabBtn = document.getElementById("loginTabBtn");
-    const registerTabBtn = document.getElementById("registerTabBtn");
-    const switchSlider = document.getElementById("switchSlider");
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-
-    if (!loginTabBtn || !registerTabBtn) return;
-
-    function switchToTab(tab) {
-      // تحديث أزرار التبديل
-      loginTabBtn.classList.toggle("active", tab === "login");
-      registerTabBtn.classList.toggle("active", tab === "register");
-
-      // تحريك السلايدر
-      if (switchSlider) {
-        switchSlider.style.transform =
-          tab === "login" ? "translateX(0)" : "translateX(100%)";
-      }
-
-      // تبديل النماذج
-      if (loginForm && registerForm) {
-        if (tab === "login") {
-          loginForm.style.display = "block";
-          registerForm.style.display = "none";
-        } else {
-          loginForm.style.display = "none";
-          registerForm.style.display = "block";
-        }
-      }
-    }
-
-    // إضافة المستمعين
-    loginTabBtn.addEventListener("click", () => switchToTab("login"));
-    registerTabBtn.addEventListener("click", () => switchToTab("register"));
-
-    // التهيئة الأولية
-    switchToTab("login");
-  }
-
   // ======================= نظام المراجعات =======================
   function initReviewsSystem() {
+    console.log("⭐ تهيئة نظام المراجعات...");
+
     // مستمعين لزر المراجعات
     document.addEventListener("click", (e) => {
       if (
@@ -488,7 +531,10 @@ document.addEventListener("DOMContentLoaded", () => {
           productCard?.querySelector(".product-title")?.textContent;
 
         if (productId && productTitle) {
+          console.log(`📝 فتح مراجعات المنتج: ${productTitle} (${productId})`);
           openReviewsModal(productId, productTitle);
+        } else {
+          console.warn("⚠️ لم يتم العثور على بيانات المنتج");
         }
       }
     });
@@ -505,6 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const rating = parseInt(star.getAttribute("data-rating"));
         window.currentRating = rating;
+        console.log(`⭐ تم اختيار تقييم: ${rating} نجوم`);
 
         // تحديث النجوم
         const stars = document.querySelectorAll(".stars-input i");
@@ -517,42 +564,72 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // زر إرسال المراجعة
-    document
-      .getElementById("submitReviewBtn")
-      ?.addEventListener("click", submitReview);
+    const submitBtn = document.getElementById("submitReviewBtn");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", submitReview);
+      console.log("✅ تم إعداد زر إرسال المراجعة");
+    } else {
+      console.warn("⚠️ زر إرسال المراجعة غير موجود");
+    }
   }
 
   // ======================= نظام المودالات =======================
   function initModals() {
-    // مودال تسجيل الدخول
+    console.log("🗂️ تهيئة نظام المودالات...");
+
+    // إعداد جميع أزرار الإغلاق (X)
+    const closeBtns = document.querySelectorAll(".close-btn");
+    closeBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        console.log("❌ النقر على زر الإغلاق");
+        // إغلاق المودال الأقرب
+        const modal = this.closest(".modal");
+        if (modal) {
+          closeModal(modal);
+        }
+      });
+    });
+
+    // مودال تسجيل الدخول والتسجيل
     const loginModal = document.getElementById("loginModal");
     const openLoginBtn = document.getElementById("openLoginModalBtn");
-    const closeBtns = document.querySelectorAll(".close-btn");
 
-    // فتح المودال
+    // فتح مودال تسجيل الدخول
     if (openLoginBtn) {
       openLoginBtn.addEventListener("click", () => {
         if (currentUser) {
           showNotification("أنت مسجل الدخول بالفعل!", "info");
           return;
         }
+        console.log("🔓 فتح مودال تسجيل الدخول والتسجيل");
         openModal(loginModal);
-      });
-    }
 
-    // إغلاق المودال
-    closeBtns.forEach((btn) => {
-      if (btn.parentElement === loginModal.querySelector(".modal-content")) {
-        btn.addEventListener("click", () => closeModal(loginModal));
-      }
-    });
+        // إظهار نموذج تسجيل الدخول افتراضياً
+        showLoginForm();
+      });
+    } else {
+      console.warn("⚠️ زر فتح مودال تسجيل الدخول غير موجود");
+    }
 
     // إغلاق عند النقر خارج المودال
     window.addEventListener("click", (event) => {
-      if (event.target === loginModal) {
-        closeModal(loginModal);
+      if (event.target.classList.contains("modal")) {
+        console.log("📌 النقر خارج المودال، إغلاقه");
+        closeModal(event.target);
       }
     });
+
+    // أزرار التبديل بين التسجيل وتسجيل الدخول
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+
+    if (showLoginBtn) {
+      showLoginBtn.addEventListener("click", showLoginForm);
+    }
+
+    if (showRegisterBtn) {
+      showRegisterBtn.addEventListener("click", showRegisterForm);
+    }
 
     // مودال الإعدادات
     const settingsModal = document.getElementById("settingsModal");
@@ -564,6 +641,7 @@ document.addEventListener("DOMContentLoaded", () => {
           showNotification("يجب تسجيل الدخول أولاً!", "error");
           return;
         }
+        console.log("⚙️ فتح مودال الإعدادات");
         openSettingsModal();
       });
     }
@@ -574,38 +652,93 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 
     if (registerFormElement) {
+      console.log("✅ إعداد نموذج التسجيل");
       registerFormElement.addEventListener("submit", handleRegister);
+    } else {
+      console.warn("⚠️ نموذج التسجيل غير موجود");
     }
 
     if (loginFormElement) {
+      console.log("✅ إعداد نموذج تسجيل الدخول");
       loginFormElement.addEventListener("submit", handleLogin);
+    } else {
+      console.warn("⚠️ نموذج تسجيل الدخول غير موجود");
     }
 
     if (saveSettingsBtn) {
+      console.log("✅ إعداد زر حفظ الإعدادات");
       saveSettingsBtn.addEventListener("click", handleSaveSettings);
+    } else {
+      console.warn("⚠️ زر حفظ الإعدادات غير موجود");
     }
+
+    console.log("✅ تم تهيئة جميع المودالات");
   }
 
   // ======================= وظائف المودالات =======================
   function openModal(modal) {
-    if (!modal) return;
+    if (!modal) {
+      console.warn("⚠️ محاولة فتح مودال غير موجود");
+      return;
+    }
 
+    console.log(`📂 فتح مودال: ${modal.id}`);
     modal.classList.add("active");
     document.body.classList.add("modal-open");
     document.body.style.overflow = "hidden";
   }
 
   function closeModal(modal) {
-    if (!modal) return;
+    if (!modal) {
+      console.warn("⚠️ محاولة إغلاق مودال غير موجود");
+      return;
+    }
 
+    console.log(`📂 إغلاق مودال: ${modal.id}`);
     modal.classList.remove("active");
     document.body.classList.remove("modal-open");
     document.body.style.overflow = "auto";
   }
 
+  // ======================= وظائف التبديل بين التسجيل والدخول =======================
+  function showLoginForm() {
+    console.log("🔐 إظهار نموذج تسجيل الدخول");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+
+    if (loginForm) loginForm.style.display = "block";
+    if (registerForm) registerForm.style.display = "none";
+
+    // تحديث حالة الأزرار
+    if (showLoginBtn) showLoginBtn.classList.add("active");
+    if (showRegisterBtn) showRegisterBtn.classList.remove("active");
+  }
+
+  function showRegisterForm() {
+    console.log("📝 إظهار نموذج التسجيل");
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const showLoginBtn = document.getElementById("showLoginBtn");
+    const showRegisterBtn = document.getElementById("showRegisterBtn");
+
+    if (loginForm) loginForm.style.display = "none";
+    if (registerForm) registerForm.style.display = "block";
+
+    // تحديث حالة الأزرار
+    if (showLoginBtn) showLoginBtn.classList.remove("active");
+    if (showRegisterBtn) showRegisterBtn.classList.add("active");
+  }
+
   // ======================= فتح مودال الإعدادات =======================
   async function openSettingsModal() {
-    if (!currentUser) return;
+    if (!currentUser) {
+      console.warn("⚠️ محاولة فتح الإعدادات بدون مستخدم");
+      return;
+    }
+
+    console.log(`⚙️ تحميل إعدادات المستخدم: ${currentUser.full_name}`);
 
     // تعبئة البيانات
     document.getElementById("settingsFullName").value = currentUser.full_name;
@@ -645,12 +778,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const newUpload = document.getElementById("avatarUpload");
 
-      newContainer.addEventListener("click", () => newUpload.click());
+      newContainer.addEventListener("click", () => {
+        console.log("🖼️ فتح نافذة اختيار الصورة");
+        newUpload.click();
+      });
 
       newUpload.addEventListener("change", async (e) => {
         const file = e.target.files[0];
+        console.log(`📄 محاولة رفع ملف: ${file?.name}`);
+
         if (file && file.size < 5 * 1024 * 1024) {
-          // أقل من 5MB
           if (!file.type.startsWith("image/")) {
             showNotification("الرجاء رفع صورة فقط!", "error");
             return;
@@ -658,6 +795,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           try {
             showLoadingScreen();
+            console.log("⬆️ بدء رفع الصورة إلى Supabase Storage...");
 
             // رفع الصورة إلى Supabase Storage
             const fileExt = file.name.split(".").pop();
@@ -671,6 +809,7 @@ document.addEventListener("DOMContentLoaded", () => {
               });
 
             if (error) throw error;
+            console.log("✅ تم رفع الصورة بنجاح");
 
             // الحصول على رابط الصورة
             const {
@@ -679,6 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
               .from("avatars")
               .getPublicUrl(`public/${fileName}`);
 
+            console.log(`🔗 رابط الصورة: ${publicUrl}`);
+
             // تحديث المستخدم في قاعدة البيانات
             const { error: updateError } = await supabase
               .from("users")
@@ -686,6 +827,7 @@ document.addEventListener("DOMContentLoaded", () => {
               .eq("id", currentUser.id);
 
             if (updateError) throw updateError;
+            console.log("✅ تم تحديث بيانات المستخدم في قاعدة البيانات");
 
             // تحديث بيانات المستخدم الحالي
             currentUser.avatar = publicUrl;
@@ -696,7 +838,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             showNotification("تم رفع وتحديث الصورة بنجاح!", "success");
           } catch (error) {
-            console.error("خطأ في رفع الصورة:", error);
+            console.error("❌ خطأ في رفع الصورة:", error);
             showNotification("فشل رفع الصورة!", "error");
           } finally {
             hideLoadingScreen();
@@ -711,6 +853,7 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarOptions.forEach((option) => {
       option.addEventListener("click", function () {
         const avatarSrc = this.getAttribute("data-avatar");
+        console.log(`🖼️ اختيار صورة: ${avatarSrc}`);
 
         // إزالة التحديد من الجميع
         avatarOptions.forEach((opt) => opt.classList.remove("selected"));
@@ -733,6 +876,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================= فتح مودال المراجعات =======================
   function openReviewsModal(productId, productTitle) {
     currentReviewsProduct = { id: productId, title: productTitle };
+    console.log(`📝 فتح مراجعات المنتج: ${productTitle} (${productId})`);
 
     // تعيين عنوان المنتج
     document.getElementById("reviewsProductTitle").textContent = productTitle;
@@ -751,6 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("reviewText").value = "";
     } else {
       writeReviewSection.style.display = "none";
+      console.log("👤 قسم كتابة المراجعة مخفي لأن المستخدم غير مسجل");
     }
 
     // تحميل المراجعات
@@ -765,10 +910,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ======================= تحميل مراجعات المنتج =======================
   async function loadProductReviews(productId) {
+    console.log(`📊 جلب مراجعات المنتج: ${productId}`);
     const reviewsList = document.getElementById("reviewsList");
     const noReviewsMessage = document.getElementById("noReviewsMessage");
 
-    if (!reviewsList) return;
+    if (!reviewsList) {
+      console.warn("⚠️ قائمة المراجعات غير موجودة");
+      return;
+    }
 
     reviewsList.innerHTML = "";
 
@@ -780,35 +929,27 @@ document.addEventListener("DOMContentLoaded", () => {
         .eq("product_id", productId)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ خطأ في جلب المراجعات:", error);
+        throw error;
+      }
 
       if (reviews && reviews.length > 0) {
+        console.log(`✅ تم جلب ${reviews.length} مراجعة`);
         noReviewsMessage.style.display = "none";
 
-        reviews.forEach((review) => {
+        reviews.forEach((review, index) => {
           const reviewElement = createReviewElement(review);
           reviewsList.appendChild(reviewElement);
         });
       } else {
+        console.log("ℹ️ لا توجد مراجعات لهذا المنتج");
         noReviewsMessage.style.display = "block";
       }
     } catch (error) {
-      console.log("لا يمكن تحميل المراجعات من قاعدة البيانات:", error.message);
-
-      // استخدام التخزين المحلي كبديل
-      const localReviews = JSON.parse(
-        localStorage.getItem(`reviews_${productId}`) || "[]"
-      );
-
-      if (localReviews.length > 0) {
-        noReviewsMessage.style.display = "none";
-        localReviews.forEach((review) => {
-          const reviewElement = createReviewElement(review);
-          reviewsList.appendChild(reviewElement);
-        });
-      } else {
-        noReviewsMessage.style.display = "block";
-      }
+      console.error("❌ لا يمكن تحميل المراجعات:", error.message);
+      noReviewsMessage.style.display = "block";
+      showNotification("حدث خطأ في تحميل المراجعات", "error");
     }
   }
 
@@ -837,7 +978,7 @@ document.addEventListener("DOMContentLoaded", () => {
           )
           .join("")}
         <span style="color: #666; margin-right: 10px;">${review.rating}.0</span>
-      </div>
+    </div>
       <p>${review.comment}</p>
     `;
 
@@ -846,19 +987,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ======================= إرسال مراجعة =======================
   async function submitReview() {
+    console.log("📤 محاولة إرسال مراجعة...");
+
     if (!currentUser) {
+      console.warn("⚠️ محاولة إرسال مراجعة بدون تسجيل دخول");
       showNotification("يجب تسجيل الدخول لكتابة مراجعة!", "error");
       return;
     }
 
     if (!window.currentRating || window.currentRating === 0) {
+      console.warn("⚠️ لم يتم اختيار تقييم");
       showNotification("يرجى اختيار تقييم!", "error");
       return;
     }
 
     const comment = document.getElementById("reviewText").value.trim();
     if (!comment) {
+      console.warn("⚠️ نص المراجعة فارغ");
       showNotification("يرجى كتابة مراجعة!", "error");
+      return;
+    }
+
+    // التحقق من أن currentUser يحتوي على id
+    if (!currentUser.id) {
+      console.error("❌ خطأ: المستخدم لا يحتوي على ID:", currentUser);
+      showNotification(
+        "خطأ في بيانات المستخدم، يرجى تسجيل الدخول مرة أخرى",
+        "error"
+      );
+      updateUIForLoggedOutUser();
       return;
     }
 
@@ -867,25 +1024,24 @@ document.addEventListener("DOMContentLoaded", () => {
       product_name: currentReviewsProduct.title,
       user_id: currentUser.id,
       user_name: currentUser.full_name,
-      user_avatar: currentUser.avatar,
+      user_avatar: currentUser.avatar || "11.svg",
       rating: window.currentRating,
       comment: comment,
-      created_at: new Date().toISOString(),
     };
+
+    console.log("📝 بيانات المراجعة المراد إرسالها:", review);
 
     try {
       // محاولة الحفظ في Supabase
       const { data, error } = await supabase.from("reviews").insert([review]);
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ خطأ في حفظ المراجعة في Supabase:", error);
+        throw error;
+      }
 
+      console.log("✅ تم حفظ المراجعة بنجاح في Supabase");
       showNotification("تم نشر مراجعتك بنجاح!", "success");
-
-      // الحفظ محلياً كنسخة احتياطية
-      const localKey = `reviews_${currentReviewsProduct.id}`;
-      const localReviews = JSON.parse(localStorage.getItem(localKey) || "[]");
-      localReviews.unshift(review);
-      localStorage.setItem(localKey, JSON.stringify(localReviews));
 
       // تحديث القائمة
       loadProductReviews(currentReviewsProduct.id);
@@ -898,27 +1054,26 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       document.getElementById("selectedRating").textContent = "0";
     } catch (error) {
-      console.error("خطأ في حفظ المراجعة:", error);
-      showNotification("تم حفظ المراجعة محلياً فقط", "info");
+      console.error("❌ فشل إرسال المراجعة:", error);
 
-      // الحفظ في التخزين المحلي
-      const localKey = `reviews_${currentReviewsProduct.id}`;
-      const localReviews = JSON.parse(localStorage.getItem(localKey) || "[]");
-      localReviews.unshift(review);
-      localStorage.setItem(localKey, JSON.stringify(localReviews));
+      let errorMessage = "حدث خطأ أثناء حفظ المراجعة!";
 
-      // تحديث القائمة
-      loadProductReviews(currentReviewsProduct.id);
+      if (error.message.includes("violates foreign key constraint")) {
+        errorMessage =
+          "خطأ: بيانات المستخدم غير صالحة، يرجى تسجيل الدخول مرة أخرى";
+        updateUIForLoggedOutUser();
+      } else if (error.message.includes("duplicate key")) {
+        errorMessage = "لقد كتبت مراجعة لهذا المنتج بالفعل!";
+      }
 
-      // إعادة تعيين النموذج
-      document.getElementById("reviewText").value = "";
-      window.currentRating = 0;
+      showNotification(errorMessage, "error");
     }
   }
 
   // ======================= معالجة التسجيل =======================
   async function handleRegister(e) {
     e.preventDefault();
+    console.log("📝 بدء عملية التسجيل...");
 
     const fullName = document.getElementById("registerFullName").value;
     const phone = document.getElementById("registerPhone").value;
@@ -927,24 +1082,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const securityCode = document.getElementById("registerSecurityCode").value;
     const submitBtn = document.getElementById("registerSubmitBtn");
 
+    console.log("📋 بيانات التسجيل:", {
+      fullName,
+      phone,
+      email,
+      password: "******",
+      securityCode,
+    });
+
     // التحقق من البيانات
     if (!fullName || !phone || !password || !securityCode) {
+      console.warn("⚠️ حقل مطلوب مفقود");
       showNotification("يرجى ملء جميع الحقول المطلوبة!", "error");
       return;
     }
 
     if (securityCode !== "909090") {
+      console.warn("⚠️ رمز الأمان غير صحيح");
       showNotification("رمز الأمان غير صحيح!", "error");
       return;
     }
 
     const phoneRegex = /^05\d{8}$/;
     if (!phoneRegex.test(phone)) {
+      console.warn("⚠️ رقم الجوال غير صحيح:", phone);
       showNotification("يرجى إدخال رقم جوال صحيح!", "error");
       return;
     }
 
     if (password.length < 6) {
+      console.warn("⚠️ كلمة المرور قصيرة:", password.length);
       showNotification("كلمة المرور يجب أن تكون 6 أحرف على الأقل!", "error");
       return;
     }
@@ -953,6 +1120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // عرض حالة التحميل
       submitBtn.classList.add("loading");
       submitBtn.disabled = true;
+      console.log("⏳ التحقق من رقم الجوال في قاعدة البيانات...");
 
       // التحقق من عدم وجود مستخدم بنفس الرقم
       const { data: existingUsers, error: checkError } = await supabase
@@ -960,11 +1128,15 @@ document.addEventListener("DOMContentLoaded", () => {
         .select("id")
         .eq("phone", phone);
 
-      if (checkError) throw checkError;
+      if (checkError) {
+        console.error("❌ خطأ في التحقق من رقم الجوال:", checkError);
+        throw checkError;
+      }
 
       if (existingUsers && existingUsers.length > 0) {
+        console.warn("⚠️ رقم الجوال مسجل بالفعل:", phone);
         showNotification("رقم الجوال مسجل بالفعل! يرجى تسجيل الدخول.", "error");
-        document.getElementById("loginTabBtn").click();
+        showLoginForm();
         document.getElementById("loginPhone").value = phone;
         return;
       }
@@ -979,18 +1151,30 @@ document.addEventListener("DOMContentLoaded", () => {
         avatar: "11.svg",
       };
 
+      console.log("⬆️ محاولة حفظ المستخدم في Supabase:", userData);
+
       // حفظ المستخدم في Supabase
       const { data: newUser, error: insertError } = await supabase
         .from("users")
         .insert([userData])
         .select()
-        .single();
+        .single(); // مهم: .single() لجلب سجل واحد فقط
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("❌ خطأ في إدراج المستخدم:", insertError);
+        throw insertError;
+      }
+
+      console.log("✅ تم إنشاء المستخدم في Supabase:", newUser);
+
+      if (!newUser || !newUser.id) {
+        throw new Error("لم يتم إنشاء المستخدم بشكل صحيح في قاعدة البيانات");
+      }
 
       // حفظ المستخدم الحالي
       currentUser = newUser;
       localStorage.setItem("user", JSON.stringify(currentUser));
+      console.log("💾 تم حفظ المستخدم في التخزين المحلي");
 
       // تحديث الواجهة
       await updateUIForLoggedInUser();
@@ -1003,11 +1187,19 @@ document.addEventListener("DOMContentLoaded", () => {
         "success"
       );
     } catch (error) {
-      console.error("فشل التسجيل:", error);
-      showNotification(
-        error.message || "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
-        "error"
-      );
+      console.error("❌ فشل التسجيل بالتفصيل:", error);
+
+      let errorMessage = "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.";
+
+      if (error.code === "23505") {
+        errorMessage = "رقم الجوال مسجل بالفعل! يرجى تسجيل الدخول.";
+      } else if (error.message.includes("violates check constraint")) {
+        errorMessage = "رقم الجوال غير صحيح! يجب أن يبدأ بـ 05 ويحتوي 10 أرقام";
+      } else if (error.message.includes("duplicate key")) {
+        errorMessage = "رقم الجوال مسجل بالفعل!";
+      }
+
+      showNotification(errorMessage, "error");
     } finally {
       submitBtn.classList.remove("loading");
       submitBtn.disabled = false;
@@ -1017,18 +1209,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================= معالجة تسجيل الدخول =======================
   async function handleLogin(e) {
     e.preventDefault();
+    console.log("🔐 بدء عملية تسجيل الدخول...");
 
     const phone = document.getElementById("loginPhone").value;
     const password = document.getElementById("loginPassword").value;
     const securityCode = document.getElementById("loginSecurityCode").value;
     const submitBtn = document.getElementById("loginSubmitBtn");
 
+    console.log("📋 بيانات تسجيل الدخول:", {
+      phone,
+      password: "******",
+      securityCode,
+    });
+
     if (!phone || !password || !securityCode) {
+      console.warn("⚠️ حقل مطلوب مفقود في تسجيل الدخول");
       showNotification("يرجى ملء جميع الحقول!", "error");
       return;
     }
 
     if (securityCode !== "909090") {
+      console.warn("⚠️ رمز الأمان غير صحيح في تسجيل الدخول");
       showNotification("رمز الأمان غير صحيح!", "error");
       return;
     }
@@ -1036,52 +1237,42 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       submitBtn.classList.add("loading");
       submitBtn.disabled = true;
-
-      let foundUser = null;
+      console.log("🔍 البحث عن المستخدم في قاعدة البيانات...");
 
       // البحث في Supabase
-      try {
-        const { data: users, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("phone", phone)
-          .eq("password", password)
-          .eq("security_code", securityCode);
+      const { data: users, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("phone", phone)
+        .eq("password", password)
+        .eq("security_code", securityCode);
 
-        if (!error && users && users.length > 0) {
-          foundUser = users[0];
-        }
-      } catch (dbError) {
-        console.log("لا يمكن الاتصال بقاعدة البيانات:", dbError.message);
+      if (error) {
+        console.error("❌ خطأ في البحث عن المستخدم:", error);
+        throw error;
       }
 
-      // البحث في التخزين المحلي
-      if (!foundUser) {
-        const localUsers = JSON.parse(
-          localStorage.getItem("localUsers") || "[]"
-        );
-        foundUser = localUsers.find(
-          (u) =>
-            u.phone === phone &&
-            u.password === password &&
-            u.security_code === securityCode
-        );
-      }
+      console.log("📊 نتيجة البحث عن المستخدم:", users);
 
-      if (!foundUser) {
+      if (!users || users.length === 0) {
+        console.warn("⚠️ بيانات الدخول غير صحيحة");
         showNotification("بيانات الدخول غير صحيحة!", "error");
         return;
       }
 
+      const foundUser = users[0];
+      console.log("✅ تم العثور على المستخدم:", foundUser);
+
       currentUser = foundUser;
       localStorage.setItem("user", JSON.stringify(currentUser));
+      console.log("💾 تم حفظ المستخدم في التخزين المحلي");
 
       await updateUIForLoggedInUser();
       closeModal(document.getElementById("loginModal"));
 
       showNotification(`🎉 مرحباً بعودتك ${currentUser.full_name}!`, "success");
     } catch (error) {
-      console.error("فشل تسجيل الدخول:", error);
+      console.error("❌ فشل تسجيل الدخول بالتفصيل:", error);
       showNotification("حدث خطأ أثناء تسجيل الدخول.", "error");
     } finally {
       submitBtn.classList.remove("loading");
@@ -1091,6 +1282,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ======================= حفظ الإعدادات =======================
   async function handleSaveSettings() {
+    console.log("💾 بدء حفظ الإعدادات...");
+
     const fullName = document.getElementById("settingsFullName").value;
     const phone = document.getElementById("settingsPhone").value;
     const email = document.getElementById("settingsEmail").value;
@@ -1102,13 +1295,23 @@ document.addEventListener("DOMContentLoaded", () => {
         ?.getAttribute("data-avatar") ||
       currentUser.avatar;
 
+    console.log("📋 بيانات الإعدادات:", {
+      fullName,
+      phone,
+      email,
+      hasPassword: !!password,
+      selectedAvatar,
+    });
+
     if (!fullName || !phone) {
+      console.warn("⚠️ الاسم ورقم الجوال مطلوبان");
       showNotification("الاسم ورقم الجوال مطلوبان!", "error");
       return;
     }
 
     const phoneRegex = /^05\d{8}$/;
     if (!phoneRegex.test(phone)) {
+      console.warn("⚠️ رقم الجوال غير صحيح:", phone);
       showNotification("رقم الجوال غير صحيح!", "error");
       return;
     }
@@ -1127,7 +1330,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // تحديث كلمة المرور إذا تم إدخالها
       if (password) {
         updatedUser.password = password;
+        console.log("🔑 تم تضمين تحديث كلمة المرور");
       }
+
+      console.log("⬆️ محاولة تحديث بيانات المستخدم في Supabase:", updatedUser);
 
       // تحديث في Supabase
       const { error } = await supabase
@@ -1135,19 +1341,17 @@ document.addEventListener("DOMContentLoaded", () => {
         .update(updatedUser)
         .eq("id", currentUser.id);
 
-      if (error) throw error;
-
-      // تحديث في التخزين المحلي
-      const localUsers = JSON.parse(localStorage.getItem("localUsers") || "[]");
-      const userIndex = localUsers.findIndex((u) => u.id === currentUser.id);
-      if (userIndex !== -1) {
-        localUsers[userIndex] = updatedUser;
-        localStorage.setItem("localUsers", JSON.stringify(localUsers));
+      if (error) {
+        console.error("❌ خطأ في تحديث بيانات المستخدم:", error);
+        throw error;
       }
+
+      console.log("✅ تم تحديث بيانات المستخدم في Supabase");
 
       // حفظ المستخدم الحالي
       currentUser = updatedUser;
       localStorage.setItem("user", JSON.stringify(currentUser));
+      console.log("💾 تم تحديث المستخدم في التخزين المحلي");
 
       // تحديث الواجهة
       await updateUIForLoggedInUser();
@@ -1155,27 +1359,31 @@ document.addEventListener("DOMContentLoaded", () => {
       closeSettingsModal();
       showNotification("✅ تم تحديث بياناتك بنجاح!", "success");
     } catch (error) {
-      console.error("فشل تحديث البيانات:", error);
+      console.error("❌ فشل تحديث البيانات:", error);
       showNotification("حدث خطأ أثناء تحديث البيانات!", "error");
     }
   }
 
   // ======================= تسجيل الخروج =======================
   window.logout = function () {
+    console.log("🚪 تسجيل خروج المستخدم...");
     hideLogoutConfirm();
     updateUIForLoggedOutUser();
     showNotification("✅ تم تسجيل الخروج بنجاح.", "success");
   };
 
   window.showLogoutConfirm = function () {
+    console.log("❓ عرض تأكيد تسجيل الخروج...");
     closeAllDropdowns();
     document.getElementById("logoutConfirmModal")?.classList.add("active");
   };
 
   window.hideLogoutConfirm = function () {
+    console.log("❌ إخفاء تأكيد تسجيل الخروج...");
     document.getElementById("logoutConfirmModal")?.classList.remove("active");
   };
 
+  // ======================= وظائف إضافية للتصحيح =======================
   window.openSettingsModal = openSettingsModal;
   window.closeSettingsModal = closeSettingsModal;
   window.openReviewsModal = openReviewsModal;
@@ -1184,22 +1392,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // ======================= اختبار اتصال Supabase =======================
   async function testSupabaseConnection() {
     try {
+      console.log("📡 اختبار اتصال Supabase...");
       const { data, error } = await supabase
         .from("users")
         .select("count", { count: "exact", head: true })
         .limit(1);
 
-      if (error && error.code === "42P01") {
-        console.log("ملاحظة: جدول users غير موجود في Supabase");
-      } else if (!error) {
+      if (error) {
+        if (error.code === "42P01") {
+          console.warn("⚠️ جدول users غير موجود في Supabase");
+          showNotification("يجب إنشاء الجداول في Supabase أولاً!", "error");
+        } else {
+          console.error("❌ مشكلة في اتصال Supabase:", error.message);
+          showNotification("مشكلة في اتصال قاعدة البيانات!", "error");
+        }
+      } else {
         console.log("✅ اتصال Supabase ناجح!");
       }
     } catch (err) {
-      console.log("❌ فشل اختبار الاتصال:", err.message);
+      console.error("❌ فشل اختبار الاتصال:", err.message);
     }
   }
 
   // ======================= تهيئة النظام =======================
+  console.log("🚀 بدء تشغيل التطبيق...");
   initApp();
   console.log("✅ تم تحميل التطبيق بنجاح!");
+  
 });

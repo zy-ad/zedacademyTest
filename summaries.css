@@ -1,382 +1,986 @@
-/* ======================= المتغيرات الأساسية ======================= */
-:root {
-  --summaries-color: var(--primary-color); /* اللون الأزرق الأساسي */
-  --a4-border-color: #e0e0e0;
-  --a4-bg-color: #fcfcfc;
-  --footer-bg: #f9f9f9;
-  --text-dark: var(--text-color);
-  --text-light: var(--light-gray);
+/* ======================= تنسيقات خاصة بصفحة أوراق العمل الثانوية ======================= */
+
+/* قسم Hero للملخصات */
+.page-hero.summaries-hero {
+  background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);
+  color: white;
+  padding: 80px 0;
+  border-radius: 0 0 20px 20px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* ======================= الحركات (Animations) ======================= */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.page-hero.summaries-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+  background-size: cover;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-text p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.hero-text strong {
+  color: #ffd700;
+}
+
+.stats-badges {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 15px 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.stat-badge:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.stat-badge i {
+  font-size: 28px;
+  color: white;
+}
+
+.stat-badge h4 {
+  font-size: 24px;
+  margin: 0;
+  color: white;
+  font-weight: 800;
+}
+
+.stat-badge p {
+  font-size: 14px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-image {
+  text-align: center;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
   }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+/* ======================= شريط البحث والتصفية ======================= */
+.summaries-filter-section {
+  background: white;
+  padding: 30px 0;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  border-radius: 15px;
+  position: sticky;
+  top: 80px;
+  z-index: 100;
+  margin-top: -20px;
+}
+
+.search-box-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.search-box {
+  display: flex;
+  background: #f8f9fa;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 2px solid #e9ecef;
+  margin-bottom: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.search-box:focus-within {
+  border-color: #20c997;
+  box-shadow: 0 5px 20px rgba(32, 201, 151, 0.2);
+  transform: translateY(-2px);
+}
+
+.search-box i.fa-search {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 18px;
+  z-index: 1;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 20px 60px 20px 20px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-family: "Cairo", sans-serif;
+}
+
+.search-box input:focus {
+  outline: none;
+}
+
+.search-box .search-btn {
+  background: linear-gradient(135deg, #20c997, #17a2b8);
+  color: white;
+  border: none;
+  padding: 0 40px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box .search-btn:hover {
+  background: linear-gradient(135deg, #1e9e8a, #138496);
+  padding: 0 45px;
+}
+
+.filters-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-group label {
+  color: #495057;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group select {
+  padding: 12px 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  background: white;
+  color: #333;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Cairo", sans-serif;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #20c997;
+  box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.1);
+}
+
+.quick-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 15px;
+  border-top: 1px solid #eaeaea;
+}
+
+.filter-tag {
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  background: white;
+  border-radius: 25px;
+  color: #666;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.filter-tag:hover {
+  border-color: #20c997;
+  color: #20c997;
+  transform: translateY(-2px);
+}
+
+.filter-tag.active {
+  background: linear-gradient(135deg, #20c997, #17a2b8);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 5px 15px rgba(32, 201, 151, 0.3);
+}
+
+/* ======================= قسم أوراق العمل ======================= */
+.worksheets-section {
+  padding: 40px 0 60px;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-header h2 {
+  color: #333;
+  font-size: 36px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.results-count {
+  color: #666;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.results-count span {
+  color: #20c997;
+  font-weight: 800;
+}
+
+.view-options {
+  display: flex;
+  gap: 10px;
+}
+
+.view-btn {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e9ecef;
+  background: white;
+  border-radius: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-btn:hover {
+  border-color: #20c997;
+  color: #20c997;
+}
+
+.view-btn.active {
+  background: linear-gradient(135deg, #20c997, #17a2b8);
+  color: white;
+  border-color: transparent;
+}
+
+/* ======================= كروت أوراق العمل ======================= */
+.worksheets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.worksheet-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid #eaeaea;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.worksheet-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: #20c997;
+}
+
+@keyframes fadeInUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.fade-in-up {
-  opacity: 0;
-  animation: fadeInUp 0.6s ease-out forwards;
+.worksheet-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.worksheet-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.worksheet-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.worksheet-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.worksheet-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.worksheet-card:nth-child(6) {
+  animation-delay: 0.6s;
 }
 
-/* ======================= قسم Hero والبحث ======================= */
-.page-hero.summaries-hero {
-  background-color: var(--summaries-color);
-  color: white;
-  padding: 80px 5%;
-  text-align: center;
-  margin-bottom: 40px;
-}
-.summaries-hero h1 {
-  font-size: 50px;
-  margin-bottom: 10px;
-  color: white;
-}
-.summaries-hero p {
-  color: var(--bg-light);
-  font-size: 18px;
-  max-width: 700px;
-  margin: 0 auto 30px auto;
-}
-
-.search-container {
-  display: flex;
-  justify-content: center;
-  max-width: 600px;
-  margin: 0 auto;
-}
-.search-bar {
-  display: flex;
-  width: 100%;
-  background-color: white;
-  border-radius: var(--border-radius-base);
-  overflow: hidden;
-  box-shadow: var(--shadow-base);
-}
-.search-bar input {
-  flex-grow: 1;
+.card-header {
   padding: 15px 20px;
-  border: none;
-  font-size: 16px;
-  text-align: right;
-}
-.search-btn {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0 25px;
-  cursor: pointer;
-  font-size: 20px;
-  transition: background-color 0.3s ease;
-}
-.search-btn:hover {
-  background-color: var(--primary-dark);
-}
-
-/* ======================= واجهة التصفية والاختيار ======================= */
-.main-content-section {
-  padding: 40px 5%;
-}
-.summaries-layout-container {
-  max-width: 1300px;
-  margin: 0 auto;
-}
-
-.selection-bar {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 20px;
-  padding: 20px 40px;
-  background-color: white;
-  border-radius: var(--border-radius-large);
-  box-shadow: var(--shadow-base);
-  margin-bottom: 40px;
-  opacity: 0;
-  animation: fadeInUp 0.5s ease-out forwards;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
 }
 
-.select-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 180px;
-  flex-grow: 1;
-}
-.select-group label {
-  font-size: 14px;
-  color: var(--text-light);
-  margin-bottom: 8px;
+.grade-badge {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: bold;
-}
-.select-group i {
-  color: var(--summaries-color);
-  margin-left: 5px;
-}
-
-.select-group select {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230074D9%22%20d%3D%22M287%2069.9%20146.2%20210.7%205.4%2069.9%2042.8%2032.5%20146.2%20135.9%20249.6%2032.5z%22%2F%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: left 10px center;
-  background-size: 12px;
-}
-.apply-filter-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--summaries-color);
   color: white;
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.subject-badge {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-.apply-filter-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  color: white;
 }
 
-/* ---------------- شبكة عرض الملخصات ---------------- */
-.grid-title {
-  text-align: right;
-  font-size: 24px;
-  color: var(--text-dark);
-  margin-bottom: 25px;
+.subject-badge.math {
+  background: linear-gradient(135deg, #dc3545, #c82333);
 }
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: 30px;
+.subject-badge.physics {
+  background: linear-gradient(135deg, #007bff, #0056b3);
 }
-
-/* الكارد الخارجي */
-.summary-card {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: var(--border-radius-base);
-  padding: 0;
-  background-color: var(--a4-bg-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.subject-badge.chemistry {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
 }
-
-.summary-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+.subject-badge.biology {
+  background: linear-gradient(135deg, #17a2b8, #117a8b);
+}
+.subject-badge.arabic {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+.subject-badge.english {
+  background: linear-gradient(135deg, #6610f2, #520dc2);
+}
+.subject-badge.history {
+  background: linear-gradient(135deg, #fd7e14, #e8590c);
+}
+.subject-badge.geography {
+  background: linear-gradient(135deg, #20c997, #1e9e8a);
 }
 
-/* الهيكل الداخلي (محاكاة A4) */
-.card-inner-a4 {
-  border: 1px solid var(--a4-border-color);
-  border-radius: var(--border-radius-base);
+.card-content {
+  padding: 25px;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%; /* يجب أن يشغل كامل ارتفاع الكارد */
+  gap: 15px;
 }
 
-/* رأس الورقة */
-.a4-header {
+.paper-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(
+    135deg,
+    rgba(32, 201, 151, 0.1),
+    rgba(23, 162, 184, 0.1)
+  );
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px;
-  color: white;
-  border-top-left-radius: var(--border-radius-base);
-  border-top-right-radius: var(--border-radius-base);
-}
-.a4-header i {
-  font-size: 35px;
+  justify-content: center;
+  font-size: 28px;
+  color: #20c997;
+  margin-bottom: 10px;
 }
 
-.title-details {
-  flex-grow: 1;
-}
-.summary-title {
+.worksheet-title {
+  color: #333;
   font-size: 20px;
   margin: 0;
-  font-weight: 700;
-}
-.summary-meta-a4 {
-  font-size: 13px;
-  margin: 0;
-  opacity: 0.9;
+  line-height: 1.4;
+  min-height: 56px;
 }
 
-/* ألوان خلفيات الأيقونات */
-.math-bg {
-  background: #ff5722;
-}
-.chemistry-bg {
-  background: #00bcd4;
-}
-.english-bg {
-  background: #673ab7;
-}
-.physics-bg {
-  background: #4caf50;
-}
-.critical-bg {
-  background: #e91e63;
-}
-
-/* جسم الورقة - هذا هو مفتاح دفع الفوتر للأسفل */
-.a4-body {
-  flex-grow: 1; /* يشغل المساحة المتبقية */
-  padding: 15px;
-  border-top: 1px solid var(--a4-border-color);
+.worksheet-info {
   display: flex;
-  flex-direction: column; /* لترتيب محتويات الجسم عمودياً */
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.summary-description {
-  font-size: 15px;
-  color: var(--dark-gray);
-  line-height: 1.6;
-  margin-bottom: 15px;
-  border-right: 3px solid var(--summaries-color);
-  padding-right: 10px;
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+  font-size: 14px;
 }
-.meta-interaction {
+
+.info-item i {
+  color: #20c997;
+  width: 20px;
+  text-align: center;
+}
+
+.lessons-covered {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #eaeaea;
+}
+
+.lessons-covered h4 {
+  color: #495057;
+  font-size: 15px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.lesson-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
-  font-size: 14px;
-  color: var(--text-light);
-  padding-top: 10px;
-  margin-top: auto; /* يدفع العناصر إلى نهاية الجسم (فوق الفوتر) */
-  border-top: 1px dashed #eee;
-}
-.meta-interaction i {
-  color: var(--summaries-color);
-  margin-left: 5px;
+  gap: 8px;
 }
 
-/* أسفل الورقة (الإجراءات والإحصائيات) - يتم تثبيته في الأسفل */
-.a4-footer {
+.lesson-tag {
+  padding: 5px 10px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #495057;
+  transition: all 0.3s ease;
+}
+
+.lesson-tag:hover {
+  background: #20c997;
+  color: white;
+  border-color: #20c997;
+  transform: translateY(-1px);
+}
+
+.file-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  border-top: 1px solid var(--a4-border-color);
-  background-color: var(--footer-bg);
-  flex-shrink: 0; /* يمنع الفوتر من الانضغاط */
+  padding: 12px 0;
+  border-top: 1px solid #f0f0f0;
 }
 
-.interaction-stats {
+.file-type,
+.file-size {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 8px;
+  color: #666;
   font-size: 14px;
-  color: var(--text-dark);
-}
-.stat-item i {
-  color: var(--summaries-color);
-  margin-left: 5px;
+  font-weight: 600;
 }
 
-.action-buttons a {
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  font-weight: bold;
-  margin-left: 10px;
-  transition: all 0.2s ease;
-  display: inline-flex; /* لضمان محاذاة الأيقونة والنص */
+.file-type i {
+  color: #dc3545;
+}
+
+.file-size i {
+  color: #6c757d;
+}
+
+.card-footer {
+  padding: 20px 25px;
+  background: #f8f9fa;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 5px;
+}
+
+.type-badge {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+}
+
+.type-badge.midterm {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+
+.type-badge.final {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.type-badge.summary {
+  background: linear-gradient(135deg, #20c997, #17a2b8);
 }
 
 .preview-btn {
-  background-color: var(--primary-color);
+  padding: 10px 25px;
+  background: linear-gradient(135deg, #0056b3, #003f7f);
   color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
+
 .preview-btn:hover {
-  background-color: var(--primary-dark);
+  background: linear-gradient(135deg, #003f7f, #002a5e);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 86, 179, 0.3);
 }
 
-.download-btn {
-  background-color: #f1f1f1;
-  color: var(--text-dark);
-  border: 1px solid #ccc;
-}
-.download-btn:hover {
-  background-color: #ddd;
+/* ======================= لا توجد نتائج ======================= */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  margin: 40px 0;
+  border: 2px dashed #dee2e6;
 }
 
-/* ---------------- استجابة الشاشة ---------------- */
-@media (max-width: 1050px) {
-  .selection-bar {
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-  }
-  .select-group {
-    min-width: 45%;
-    flex-grow: 1;
-  }
-  .apply-filter-btn {
-    min-width: 100%;
-    margin-top: 10px;
-  }
+.no-results-content i {
+  font-size: 60px;
+  color: #ffc107;
+  margin-bottom: 20px;
 }
-@media (max-width: 768px) {
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-  .select-group {
-    min-width: 100%;
-  }
-  .a4-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .action-buttons {
-    margin-top: 5px;
-  }
-}
-/* ======================= تنسيق شاشة التحميل (مؤشر الانتظار) ======================= */
 
-.loading-screen {
-  position: fixed;
+.no-results-content h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.no-results-content p {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.reset-filters-btn {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #20c997, #17a2b8);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reset-filters-btn:hover {
+  background: linear-gradient(135deg, #1e9e8a, #138496);
+  transform: translateY(-2px);
+}
+
+/* ======================= تحميل المزيد ======================= */
+.load-more {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.load-more-btn {
+  padding: 15px 40px;
+  background: white;
+  border: 2px solid #20c997;
+  color: #20c997;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.load-more-btn:hover {
+  background: linear-gradient(135deg, #20c997, #17a2b8);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(32, 201, 151, 0.3);
+}
+
+/* ======================= قسم المواد الدراسية ======================= */
+.subjects-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  margin: 40px 0;
+}
+
+.subjects-section h2 {
+  text-align: center;
+  color: #333;
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.subject-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.subject-card::before {
+  content: "";
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  height: 5px;
+  transition: all 0.3s ease;
+}
+
+.subject-card.math::before {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+}
+.subject-card.physics::before {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+.subject-card.chemistry::before {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+.subject-card.biology::before {
+  background: linear-gradient(135deg, #17a2b8, #117a8b);
+}
+.subject-card.arabic::before {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+}
+.subject-card.english::before {
+  background: linear-gradient(135deg, #6610f2, #520dc2);
+}
+.subject-card.history::before {
+  background: linear-gradient(135deg, #fd7e14, #e8590c);
+}
+.subject-card.geography::before {
+  background: linear-gradient(135deg, #20c997, #1e9e8a);
+}
+
+.subject-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.subject-card:hover::before {
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.95); /* خلفية بيضاء شبه شفافة */
-  z-index: 9999; /* يضمن ظهورها فوق جميع العناصر */
+  opacity: 0.1;
+}
+
+.subject-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 2;
 }
 
-/* فئة الإظهار (يتم إضافتها بواسطة JS) */
-.loading-screen.is-active {
-  opacity: 1;
-  visibility: visible;
+.subject-card.math .subject-icon {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+.subject-card.physics .subject-icon {
+  background: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+.subject-card.chemistry .subject-icon {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+.subject-card.biology .subject-icon {
+  background: rgba(23, 162, 184, 0.1);
+  color: #17a2b8;
+}
+.subject-card.arabic .subject-icon {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+.subject-card.english .subject-icon {
+  background: rgba(102, 16, 242, 0.1);
+  color: #6610f2;
+}
+.subject-card.history .subject-icon {
+  background: rgba(253, 126, 20, 0.1);
+  color: #fd7e14;
+}
+.subject-card.geography .subject-icon {
+  background: rgba(32, 201, 151, 0.1);
+  color: #20c997;
 }
 
-.spinner i {
-  color: var(--primary-color); /* اللون الأزرق */
-  font-size: 50px;
+.subject-card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
 }
 
-.loading-screen p {
-  margin-top: 20px;
-  font-size: 18px;
-  color: var(--text-dark);
+.subject-card p {
+  color: #666;
+  font-size: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ======================= تصميم متجاوب ======================= */
+@media (max-width: 1200px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-image {
+    order: -1;
+  }
+
+  .worksheets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+@media (max-width: 992px) {
+  .search-box-wrapper {
+    padding: 0 15px;
+  }
+
+  .filters-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .worksheets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+
+  .subjects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-hero.summaries-hero {
+    padding: 60px 0;
+  }
+
+  .hero-text h1 {
+    font-size: 36px;
+  }
+
+  .hero-text p {
+    font-size: 16px;
+  }
+
+  .stats-badges {
+    justify-content: center;
+  }
+
+  .stat-badge {
+    flex: 1;
+    min-width: 150px;
+    justify-content: center;
+  }
+
+  .search-box {
+    flex-direction: column;
+  }
+
+  .search-box input {
+    padding: 15px;
+  }
+
+  .search-box .search-btn {
+    padding: 15px;
+    justify-content: center;
+  }
+
+  .filters-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .worksheets-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-info {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .view-options {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .worksheet-card {
+    margin: 0 10px;
+  }
+
+  .card-content {
+    padding: 20px;
+  }
+
+  .card-footer {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .preview-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .subject-card {
+    padding: 20px;
+  }
+
+  .subject-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+}
+
+/* ======================= تأثيرات الظهور عند التمرير ======================= */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-text {
+  animation: slideInRight 0.8s ease forwards;
+}
+
+.hero-image {
+  animation: slideInLeft 0.8s ease forwards;
+}
+
+.stats-badges .stat-badge:nth-child(1) {
+  animation-delay: 0.3s;
+}
+.stats-badges .stat-badge:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.stats-badges .stat-badge:nth-child(3) {
+  animation-delay: 0.5s;
 }

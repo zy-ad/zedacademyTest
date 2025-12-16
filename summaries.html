@@ -6,7 +6,7 @@
     <title>اكادمية زد | الملخصات</title>
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="summaries.css" />
-    <link rel="icon" type="image/png" href="/img/logotop.png" />
+    <link rel="icon" type="image/png" href="logotop.png" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -19,10 +19,19 @@
     />
   </head>
   <body>
+    <!-- شاشة التحميل -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ التحميل...</p>
+    </div>
+
+    <!-- شريط التنقل -->
     <header class="navbar">
       <div class="navbar-content">
         <a href="index.html" class="logo-link">
-          <img src="/img/logo.png" alt="شعار Royal Store" class="logo" />
+          <img src="logo.svg" alt="شعار Royal Store" class="logo" />
         </a>
 
         <nav class="nav-links">
@@ -33,350 +42,1035 @@
         </nav>
 
         <div class="nav-actions">
-          <div class="user-icon-container" data-tooltip="تسجيل الدخول">
-            <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
+          <!-- قائمة المستخدم (Dropdown) -->
+          <div class="user-dropdown" id="userDropdown">
+            <!-- الحالة قبل التسجيل -->
+            <div id="guestUser" class="guest-user" style="display: none">
+              <div class="user-icon-container" data-tooltip="تسجيل الدخول">
+                <i
+                  class="fas fa-user-circle user-icon"
+                  id="openLoginModalBtn"
+                ></i>
+              </div>
+            </div>
+
+            <!-- الحالة بعد التسجيل -->
+            <div id="loggedInUser" class="logged-in-user" style="display: none">
+              <div class="user-profile" id="userProfileBtn">
+                <img
+                  src="11.svg"
+                  alt="صورة المستخدم"
+                  class="user-avatar"
+                  id="currentUserAvatar"
+                />
+                <div class="user-info">
+                  <span class="user-name" id="displayUserName">زياد حجاج</span>
+                  <span class="user-status">نشط الآن</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
+
+              <!-- قائمة Dropdown -->
+              <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-header">
+                  <img
+                    src="11.svg"
+                    alt="صورة المستخدم"
+                    class="dropdown-avatar"
+                    id="dropdownAvatar"
+                  />
+                  <div>
+                    <h4 id="dropdownUserName">زياد حجاج</h4>
+                    <p id="dropdownUserEmail">user@example.com</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="profile.html" class="dropdown-item">
+                  <i class="fas fa-user"></i>
+                  <span>الملف الشخصي</span>
+                </a>
+                <a href="#" class="dropdown-item" id="openSettingsModalBtn">
+                  <i class="fas fa-cog"></i>
+                  <span>الإعدادات</span>
+                </a>
+                <a href="purchases.html" class="dropdown-item">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>طلباتي</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a
+                  href="#"
+                  class="dropdown-item logout-item"
+                  onclick="showLogoutConfirm()"
+                >
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>تسجيل الخروج</span>
+                </a>
+              </div>
+            </div>
           </div>
 
-          <a href="store.html" class="cta-button">ابدأ الآن</a>
+          <a href="store.html" class="cta-button" id="ctaButton">ابدأ الآن</a>
         </div>
       </div>
     </header>
 
-    <main>
-      <section class="page-hero summaries-hero">
-        <div class="hero-text-content">
-          <h1>
-            ملخصات ومراجعات لجميع المواد <i class="fas fa-book-reader"></i>
-          </h1>
-          <p>
-            ابحث واختر ورقة العمل المناسبة لصفك ومادتك ودرسك. تغطية شاملة لجميع
-            الفترات.
-          </p>
-          <div class="search-container">
-            <div class="search-bar">
-              <input
-                type="text"
-                id="summarySearchInput"
-                placeholder="ابحث مباشرة: (مثال: رياضيات الفصل 3)"
+    <!-- نافذة تأكيد تسجيل الخروج -->
+    <div id="logoutConfirmModal" class="confirm-modal">
+      <div class="confirm-content">
+        <i
+          class="fas fa-sign-out-alt"
+          style="font-size: 50px; color: #dc3545; margin-bottom: 15px"
+        ></i>
+        <h3 style="margin-bottom: 10px">تأكيد تسجيل الخروج</h3>
+        <p style="color: #666; margin-bottom: 25px">
+          هل أنت متأكد من رغبتك في تسجيل الخروج؟
+        </p>
+        <div class="confirm-buttons">
+          <button class="confirm-btn confirm-yes" onclick="logout()">
+            نعم، سجل خروج
+          </button>
+          <button class="confirm-btn confirm-no" onclick="hideLogoutConfirm()">
+            لا، إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال الإعدادات -->
+    <div id="settingsModal" class="modal settings-modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeSettingsModal()">&times;</span>
+        <div class="settings-content">
+          <h3
+            style="
+              text-align: center;
+              color: var(--primary-color);
+              margin-bottom: 30px;
+            "
+          >
+            <i class="fas fa-cog" style="margin-left: 10px"></i>
+            إعدادات الحساب
+          </h3>
+
+          <div class="settings-avatar-section">
+            <div class="avatar-upload-container">
+              <img
+                id="avatarPreview"
+                src="11.svg"
+                alt="صورة الحساب"
+                class="avatar-preview"
               />
-              <button class="search-btn">
-                <i class="fas fa-search"></i>
+              <div class="avatar-upload-overlay">
+                <i class="fas fa-camera"></i>
+                <span>تغيير الصورة</span>
+              </div>
+              <input
+                type="file"
+                id="avatarUpload"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+
+            <h4 style="margin-bottom: 15px; color: #666">اختر صورتك الشخصية</h4>
+            <div class="avatar-options">
+              <img
+                src="11.svg"
+                alt="صورة 11"
+                class="avatar-option"
+                data-avatar="11.svg"
+              />
+              <img
+                src="22.svg"
+                alt="صورة 22"
+                class="avatar-option"
+                data-avatar="22.svg"
+              />
+              <img
+                src="33.svg"
+                alt="صورة 33"
+                class="avatar-option"
+                data-avatar="33.svg"
+              />
+              <img
+                src="44.svg"
+                alt="صورة 44"
+                class="avatar-option"
+                data-avatar="44.svg"
+              />
+              <img
+                src="55.svg"
+                alt="صورة 55"
+                class="avatar-option"
+                data-avatar="55.svg"
+              />
+              <img
+                src="66.svg"
+                alt="صورة 66"
+                class="avatar-option"
+                data-avatar="66.svg"
+              />
+              <img
+                src="77.svg"
+                alt="صورة 77"
+                class="avatar-option"
+                data-avatar="77.svg"
+              />
+              <img
+                src="88.svg"
+                alt="صورة 88"
+                class="avatar-option"
+                data-avatar="88.svg"
+              />
+            </div>
+          </div>
+
+          <form id="settingsForm">
+            <div class="form-group">
+              <label for="settingsFullName">الاسم الكامل</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  id="settingsFullName"
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsPhone">رقم الجوال</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone-alt input-icon"></i>
+                <input
+                  type="tel"
+                  id="settingsPhone"
+                  required
+                  placeholder="مثال: 0555555555"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsEmail">البريد الإلكتروني</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  id="settingsEmail"
+                  required
+                  placeholder="example@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsPassword">كلمة المرور</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock input-icon"></i>
+                <input
+                  type="password"
+                  id="settingsPassword"
+                  placeholder="اتركها فارغة إذا لم ترد التغيير"
+                />
+              </div>
+            </div>
+          </form>
+
+          <div class="settings-buttons">
+            <button
+              type="button"
+              class="settings-btn cancel"
+              onclick="closeSettingsModal()"
+            >
+              <i class="fas fa-times" style="margin-left: 8px"></i>
+              إلغاء
+            </button>
+            <button
+              type="button"
+              class="settings-btn save"
+              id="saveSettingsBtn"
+            >
+              <i class="fas fa-save" style="margin-left: 8px"></i>
+              حفظ التغييرات
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال التسجيل والتسجيل الدخول -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-body">
+          <div class="modal-image-side">
+            <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
+          </div>
+          <div class="modal-form-side">
+            <!-- أزرار التبديل -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px">
+              <button
+                id="showLoginBtn"
+                class="switch-btn active"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  background: #0056b3;
+                  color: white;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                "
+              >
+                تسجيل الدخول
               </button>
+              <button
+                id="showRegisterBtn"
+                class="switch-btn"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  background: #f0f0f0;
+                  color: #666;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                "
+              >
+                تسجيل جديد
+              </button>
+            </div>
+
+            <!-- نموذج تسجيل الدخول -->
+            <div id="loginForm" class="tab-content active">
+              <h3>تسجيل الدخول</h3>
+              <form id="loginFormElement">
+                <div class="form-group">
+                  <label for="loginPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="loginPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginPassword"
+                      required
+                      placeholder="أدخل كلمة المرور"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="loginSubmitBtn"
+                >
+                  <span class="btn-text">تسجيل الدخول</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- نموذج التسجيل الجديد -->
+            <div id="registerForm" class="tab-content" style="display: none">
+              <h3>إنشاء حساب جديد</h3>
+              <form id="registerFormElement">
+                <div class="form-group">
+                  <label for="registerFullName">الاسم الكامل</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input
+                      type="text"
+                      id="registerFullName"
+                      required
+                      placeholder="أدخل اسمك الكامل"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="registerPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerEmail">البريد الإلكتروني</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input
+                      type="email"
+                      id="registerEmail"
+                      placeholder="example@email.com"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerPassword"
+                      required
+                      placeholder="أدخل كلمة مرور قوية"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                  <small style="color: #666; display: block; margin-top: 5px">
+                    رمز الأمان ستحصل عليه من الإدارة
+                  </small>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="registerSubmitBtn"
+                >
+                  <span class="btn-text">إنشاء حساب</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- إشعارات جانبية -->
+    <div id="notification" class="notification">
+      <i class="fas fa-check-circle"></i>
+      <span class="notification-text"></span>
+    </div>
+
+    <main>
+      <!-- قسم Hero للملخصات -->
+      <section class="page-hero summaries-hero">
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-text">
+              <h1>أوراق العمل الثانوية الشاملة</h1>
+              <p>
+                أكثر من <strong>400 ورقة عمل</strong> مجانية لجميع مواد المرحلة
+                الثانوية (أول - ثاني - ثالث) تشمل كل الفصول الدراسية والدروس
+                والاختبارات النصفية والنهائية
+              </p>
+              <div class="stats-badges">
+                <div class="stat-badge">
+                  <i class="fas fa-file-alt"></i>
+                  <div>
+                    <h4>400+</h4>
+                    <p>ورقة عمل</p>
+                  </div>
+                </div>
+                <div class="stat-badge">
+                  <i class="fas fa-book"></i>
+                  <div>
+                    <h4>12</h4>
+                    <p>مادة دراسية</p>
+                  </div>
+                </div>
+                <div class="stat-badge">
+                  <i class="fas fa-graduation-cap"></i>
+                  <div>
+                    <h4>3</h4>
+                    <p>مراحل دراسية</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="hero-image">
+              <img src="الملخصات.svg" alt="صورة الملخصات" />
             </div>
           </div>
         </div>
       </section>
 
-      <section class="main-content-section">
-        <div class="summaries-layout-container">
-          <div class="selection-bar">
-            <div class="select-group">
-              <label for="gradeSelect"
-                ><i class="fas fa-graduation-cap"></i> الصف الدراسي:</label
-              >
-              <select id="gradeSelect">
-                <option value="">اختر الصف...</option>
-                <option value="grade-1">الصف الأول الثانوي</option>
-                <option value="grade-2">الصف الثاني الثانوي</option>
-                <option value="grade-3">الصف الثالث الثانوي</option>
-              </select>
-            </div>
+      <!-- شريط البحث والتصفية -->
 
-            <div class="select-group">
-              <label for="subjectSelect"
-                ><i class="fas fa-flask"></i> المادة:</label
+      <!-- قسم أوراق العمل -->
+      <section class="worksheets-section">
+        <div class="container">
+          <div class="section-header">
+            <h2>أوراق العمل المتاحة</h2>
+            <div class="results-info">
+              <span class="results-count"
+                >عرض <span id="worksheetCount">24</span> من 400+ ورقة عمل</span
               >
-              <select id="subjectSelect" disabled>
-                <option value="">اختر المادة...</option>
-              </select>
+              <div class="view-options">
+                <button class="view-btn active" data-view="grid">
+                  <i class="fas fa-th"></i>
+                </button>
+                <button class="view-btn" data-view="list">
+                  <i class="fas fa-list"></i>
+                </button>
+              </div>
             </div>
-
-            <div class="select-group">
-              <label for="lessonSelect"
-                ><i class="fas fa-chalkboard-teacher"></i> الدرس/الوحدة:</label
-              >
-              <select id="lessonSelect" disabled>
-                <option value="">اختر الدرس...</option>
-              </select>
-            </div>
-
-            <button class="apply-filter-btn" id="applyFilterBtn" disabled>
-              تصفية النتائج
-            </button>
           </div>
 
-          <div class="summaries-grid-area">
-            <h2 class="grid-title">
-              <i class="fas fa-list-ul"></i>
-              ورقة عمل متاحة: <span id="summaryCount">4</span>
-            </h2>
+          <div class="worksheets-grid" id="worksheetsGrid">
+            <!-- ورقة عمل 1 -->
+            <div
+              class="worksheet-card"
+              data-grade="first"
+              data-subject="math"
+              data-semester="first"
+              data-type="worksheet"
+              data-lessons="الدوال، المعادلات، المتباينات"
+            >
+              <div class="card-header">
+                <div class="grade-badge">أول ثانوي</div>
+                <div class="subject-badge math">رياضيات</div>
+              </div>
 
-            <div class="summary-grid" id="summariesGrid">
-              <div
-                class="summary-card fade-in-up"
-                data-grade="grade-1"
-                data-subject="math"
-                data-lesson="lesson-1-1"
-                data-unit="الوحدة 1"
-                data-teacher="أ. محمد"
-              >
-                <div class="card-inner-a4">
-                  <div class="a4-header math-bg">
-                    <i class="fas fa-square-root-alt"></i>
-                    <div class="title-details">
-                      <h3 class="summary-title">
-                        ورقة عمل: الدوال المثلثية (الفصل الأول)
-                      </h3>
-                      <p class="summary-meta-a4">
-                        الصف الأول الثانوي | الرياضيات - الوحدة 1
-                      </p>
-                    </div>
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">
+                  ورقة عمل الرياضيات - الفصل الأول
+                </h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الأول</span>
                   </div>
-
-                  <div class="a4-body">
-                    <p class="summary-description">
-                      ملخص شامل لأول درسين في الوحدة الأولى. يشمل التعريفات
-                      الأساسية والأمثلة التطبيقية.
-                    </p>
-                    <div class="meta-interaction">
-                      <span class="meta-item"
-                        ><i class="fas fa-clipboard-list"></i> **الدرس:** الدوال
-                        المثلثية</span
-                      >
-                      <span class="meta-item"
-                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
-                        المعلم</span
-                      >
-                    </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>15 صفحة</span>
                   </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>1,245 تحميل</span>
+                  </div>
+                </div>
 
-                  <div class="a4-footer">
-                    <div class="interaction-stats">
-                      <span class="stat-item"
-                        ><i class="fas fa-eye"></i> 1,234 معاينة</span
-                      >
-                      <span class="stat-item"
-                        ><i class="fas fa-download"></i> 589 تنزيل</span
-                      >
-                    </div>
-                    <div class="action-buttons">
-                      <a href="#preview" class="preview-btn"
-                        ><i class="fas fa-eye"></i> معاينة</a
-                      >
-                      <a href="#download" class="download-btn"
-                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
-                      >
-                    </div>
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">الدوال والعلاقات</span>
+                    <span class="lesson-tag">المعادلات الخطية</span>
+                    <span class="lesson-tag">المتباينات</span>
+                    <span class="lesson-tag">نظم المعادلات</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>2.4 MB</span>
                   </div>
                 </div>
               </div>
 
-              <div
-                class="summary-card fade-in-up"
-                style="animation-delay: 0.1s"
-                data-grade="grade-2"
-                data-subject="chemistry"
-                data-lesson="lesson-2-2"
-                data-unit="الوحدة 2"
-                data-teacher="أ. خالد"
-              >
-                <div class="card-inner-a4">
-                  <div class="a4-header chemistry-bg">
-                    <i class="fas fa-vial"></i>
-                    <div class="title-details">
-                      <h3 class="summary-title">
-                        ورقة عمل: أساسيات الهيدروكربونات العضوية
-                      </h3>
-                      <p class="summary-meta-a4">
-                        الصف الثاني الثانوي | الكيمياء - الوحدة 2
-                      </p>
-                    </div>
-                  </div>
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge">ورقة عمل</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="1">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
+              </div>
+            </div>
 
-                  <div class="a4-body">
-                    <p class="summary-description">
-                      ورقة عمل مكثفة تغطي تسمية الهيدروكربونات وتصنيفها. مثالية
-                      للمراجعة النهائية للوحدة.
-                    </p>
-                    <div class="meta-interaction">
-                      <span class="meta-item"
-                        ><i class="fas fa-clipboard-list"></i> **الدرس:**
-                        الهيدروكربونات</span
-                      >
-                      <span class="meta-item"
-                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
-                        المعلم</span
-                      >
-                    </div>
-                  </div>
+            <!-- ورقة عمل 2 -->
+            <div
+              class="worksheet-card"
+              data-grade="first"
+              data-subject="physics"
+              data-semester="first"
+              data-type="midterm"
+              data-lessons="الميكانيكا، الحركة، القوى"
+            >
+              <div class="card-header">
+                <div class="grade-badge">أول ثانوي</div>
+                <div class="subject-badge physics">فيزياء</div>
+              </div>
 
-                  <div class="a4-footer">
-                    <div class="interaction-stats">
-                      <span class="stat-item"
-                        ><i class="fas fa-eye"></i> 987 معاينة</span
-                      >
-                      <span class="stat-item"
-                        ><i class="fas fa-download"></i> 412 تنزيل</span
-                      >
-                    </div>
-                    <div class="action-buttons">
-                      <a href="#preview" class="preview-btn"
-                        ><i class="fas fa-eye"></i> معاينة</a
-                      >
-                      <a href="#download" class="download-btn"
-                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
-                      >
-                    </div>
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">
+                  اختبار الفيزياء النصفي - الفصل الأول
+                </h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الأول</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>8 صفحات</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>2,103 تحميل</span>
+                  </div>
+                </div>
+
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">مقدمة في الفيزياء</span>
+                    <span class="lesson-tag">الحركة في خط مستقيم</span>
+                    <span class="lesson-tag">القوة والحركة</span>
+                    <span class="lesson-tag">الشغل والطاقة</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>1.8 MB</span>
                   </div>
                 </div>
               </div>
 
-              <div
-                class="summary-card fade-in-up"
-                style="animation-delay: 0.2s"
-                data-grade="grade-3"
-                data-subject="english"
-                data-lesson="lesson-3-3"
-                data-unit="Unit 3"
-                data-teacher="أ. سارة"
-              >
-                <div class="card-inner-a4">
-                  <div class="a4-header english-bg">
-                    <i class="fas fa-language"></i>
-                    <div class="title-details">
-                      <h3 class="summary-title">
-                        ورقة عمل: Grammar Focus (الوحدات 3 & 4)
-                      </h3>
-                      <p class="summary-meta-a4">
-                        الصف الثالث الثانوي | الإنجليزية - Unit 3
-                      </p>
-                    </div>
-                  </div>
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge midterm">اختبار نصفي</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="2">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
+              </div>
+            </div>
 
-                  <div class="a4-body">
-                    <p class="summary-description">
-                      تدريبات مكثفة على قواعد الفصل الثالث والرابع، مع التركيز
-                      على التراكيب الشائعة.
-                    </p>
-                    <div class="meta-interaction">
-                      <span class="meta-item"
-                        ><i class="fas fa-clipboard-list"></i> **الدرس:** قواعد
-                        الوحدة 3</span
-                      >
-                      <span class="meta-item"
-                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
-                        المعلم</span
-                      >
-                    </div>
-                  </div>
+            <!-- ورقة عمل 3 -->
+            <div
+              class="worksheet-card"
+              data-grade="second"
+              data-subject="chemistry"
+              data-semester="first"
+              data-type="worksheet"
+              data-lessons="الجدول الدوري، الروابط الكيميائية"
+            >
+              <div class="card-header">
+                <div class="grade-badge">ثاني ثانوي</div>
+                <div class="subject-badge chemistry">كيمياء</div>
+              </div>
 
-                  <div class="a4-footer">
-                    <div class="interaction-stats">
-                      <span class="stat-item"
-                        ><i class="fas fa-eye"></i> 1,500 معاينة</span
-                      >
-                      <span class="stat-item"
-                        ><i class="fas fa-download"></i> 650 تنزيل</span
-                      >
-                    </div>
-                    <div class="action-buttons">
-                      <a href="#preview" class="preview-btn"
-                        ><i class="fas fa-eye"></i> معاينة</a
-                      >
-                      <a href="#download" class="download-btn"
-                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
-                      >
-                    </div>
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">
+                  ورقة عمل الكيمياء - الجدول الدوري
+                </h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الأول</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>12 صفحة</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>1,876 تحميل</span>
+                  </div>
+                </div>
+
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">الجدول الدوري</span>
+                    <span class="lesson-tag">التوزيع الإلكتروني</span>
+                    <span class="lesson-tag">الروابط الكيميائية</span>
+                    <span class="lesson-tag">التفاعلات الكيميائية</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>3.1 MB</span>
                   </div>
                 </div>
               </div>
 
-              <div
-                class="summary-card fade-in-up"
-                style="animation-delay: 0.3s"
-                data-grade="grade-3"
-                data-subject="critical"
-                data-lesson="lesson-3-4"
-                data-unit="الوحدة 1"
-                data-teacher="أ. زينب"
-              >
-                <div class="card-inner-a4">
-                  <div class="a4-header critical-bg">
-                    <i class="fas fa-brain"></i>
-                    <div class="title-details">
-                      <h3 class="summary-title">
-                        ملخص: مهارة الاستدلال والقياس المنطقي
-                      </h3>
-                      <p class="summary-meta-a4">
-                        الصف الثالث الثانوي | التفكير الناقد - الوحدة 1
-                      </p>
-                    </div>
-                  </div>
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge">ورقة عمل</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="3">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
+              </div>
+            </div>
 
-                  <div class="a4-body">
-                    <p class="summary-description">
-                      تغطية مبسطة لمهارة القياس المنطقي، يشمل الأمثلة والتمارين
-                      لتعميق الفهم.
-                    </p>
-                    <div class="meta-interaction">
-                      <span class="meta-item"
-                        ><i class="fas fa-clipboard-list"></i> **الدرس:** القياس
-                        المنطقي</span
-                      >
-                      <span class="meta-item"
-                        ><i class="fas fa-user-edit"></i> **المعلم:** اسم
-                        المعلم</span
-                      >
-                    </div>
-                  </div>
+            <!-- ورقة عمل 4 -->
+            <div
+              class="worksheet-card"
+              data-grade="third"
+              data-subject="arabic"
+              data-semester="second"
+              data-type="final"
+              data-lessons="النصوص، البلاغة، النحو"
+            >
+              <div class="card-header">
+                <div class="grade-badge">ثالث ثانوي</div>
+                <div class="subject-badge arabic">عربي</div>
+              </div>
 
-                  <div class="a4-footer">
-                    <div class="interaction-stats">
-                      <span class="stat-item"
-                        ><i class="fas fa-eye"></i> 700 معاينة</span
-                      >
-                      <span class="stat-item"
-                        ><i class="fas fa-download"></i> 350 تنزيل</span
-                      >
-                    </div>
-                    <div class="action-buttons">
-                      <a href="#preview" class="preview-btn"
-                        ><i class="fas fa-eye"></i> معاينة</a
-                      >
-                      <a href="#download" class="download-btn"
-                        ><i class="fas fa-cloud-download-alt"></i> تنزيل</a
-                      >
-                    </div>
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">اختبار اللغة العربية النهائي</h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الثاني</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>10 صفحات</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>3,456 تحميل</span>
+                  </div>
+                </div>
+
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">النصوص الأدبية</span>
+                    <span class="lesson-tag">علم البلاغة</span>
+                    <span class="lesson-tag">النحو والصرف</span>
+                    <span class="lesson-tag">التعبير الكتابي</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>2.7 MB</span>
                   </div>
                 </div>
               </div>
 
-              <div
-                id="noResults"
-                class="no-results-message"
-                style="display: none"
-              >
-                <i class="fas fa-search-minus fa-3x"></i>
-                <p>
-                  عذراً، لم يتم العثور على أوراق عمل مطابقة لاختيارك أو بحثك.
-                </p>
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge final">اختبار نهائي</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="4">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
               </div>
+            </div>
+
+            <!-- ورقة عمل 5 -->
+            <div
+              class="worksheet-card"
+              data-grade="second"
+              data-subject="english"
+              data-semester="first"
+              data-type="worksheet"
+              data-lessons="Grammar, Vocabulary, Reading"
+            >
+              <div class="card-header">
+                <div class="grade-badge">ثاني ثانوي</div>
+                <div class="subject-badge english">إنجليزي</div>
+              </div>
+
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">
+                  English Worksheet - First Semester
+                </h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الأول</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>14 صفحة</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>1,987 تحميل</span>
+                  </div>
+                </div>
+
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">Present Tenses</span>
+                    <span class="lesson-tag">Vocabulary Building</span>
+                    <span class="lesson-tag">Reading Comprehension</span>
+                    <span class="lesson-tag">Writing Skills</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>2.9 MB</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge">ورقة عمل</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="5">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
+              </div>
+            </div>
+
+            <!-- ورقة عمل 6 -->
+            <div
+              class="worksheet-card"
+              data-grade="third"
+              data-subject="biology"
+              data-semester="second"
+              data-type="summary"
+              data-lessons="الخلية، الوراثة، التطور"
+            >
+              <div class="card-header">
+                <div class="grade-badge">ثالث ثانوي</div>
+                <div class="subject-badge biology">أحياء</div>
+              </div>
+
+              <div class="card-content">
+                <div class="paper-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+
+                <h3 class="worksheet-title">ملخص الأحياء - الفصل الثاني</h3>
+
+                <div class="worksheet-info">
+                  <div class="info-item">
+                    <i class="fas fa-book-open"></i>
+                    <span>الفصل الدراسي الثاني</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>20 صفحة</span>
+                  </div>
+                  <div class="info-item">
+                    <i class="fas fa-download"></i>
+                    <span>2,543 تحميل</span>
+                  </div>
+                </div>
+
+                <div class="lessons-covered">
+                  <h4>الدروس المشمولة:</h4>
+                  <div class="lesson-tags">
+                    <span class="lesson-tag">تركيب الخلية</span>
+                    <span class="lesson-tag">علم الوراثة</span>
+                    <span class="lesson-tag">التطور والتصنيف</span>
+                    <span class="lesson-tag">أجهزة الجسم</span>
+                  </div>
+                </div>
+
+                <div class="file-details">
+                  <div class="file-type">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDF</span>
+                  </div>
+                  <div class="file-size">
+                    <i class="fas fa-hdd"></i>
+                    <span>4.2 MB</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="test-type">
+                  <span class="type-badge summary">ملخص</span>
+                </div>
+                <button class="preview-btn" data-worksheet-id="6">
+                  <i class="fas fa-eye"></i> معاينة
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="no-results" id="noResults" style="display: none">
+            <div class="no-results-content">
+              <i class="fas fa-search"></i>
+              <h3>لا توجد نتائج تطابق بحثك</h3>
+              <p>حاول تغيير معايير البحث أو استخدم كلمات بحث مختلفة</p>
+              <button class="reset-filters-btn" id="resetFiltersBtn">
+                <i class="fas fa-redo"></i> إعادة تعيين الفلاتر
+              </button>
+            </div>
+          </div>
+
+          <div class="load-more">
+            <button class="load-more-btn" id="loadMoreBtn">
+              <i class="fas fa-redo"></i> تحميل المزيد من أوراق العمل
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم المواد الدراسية -->
+      <section class="subjects-section">
+        <div class="container">
+          <h2>المواد الدراسية المتاحة</h2>
+          <div class="subjects-grid">
+            <div class="subject-card math">
+              <div class="subject-icon">
+                <i class="fas fa-calculator"></i>
+              </div>
+              <h3>الرياضيات</h3>
+              <p>45 ورقة عمل + 20 اختبار</p>
+            </div>
+
+            <div class="subject-card physics">
+              <div class="subject-icon">
+                <i class="fas fa-atom"></i>
+              </div>
+              <h3>الفيزياء</h3>
+              <p>38 ورقة عمل + 18 اختبار</p>
+            </div>
+
+            <div class="subject-card chemistry">
+              <div class="subject-icon">
+                <i class="fas fa-flask"></i>
+              </div>
+              <h3>الكيمياء</h3>
+              <p>32 ورقة عمل + 15 اختبار</p>
+            </div>
+
+            <div class="subject-card biology">
+              <div class="subject-icon">
+                <i class="fas fa-dna"></i>
+              </div>
+              <h3>الأحياء</h3>
+              <p>28 ورقة عمل + 12 اختبار</p>
+            </div>
+
+            <div class="subject-card arabic">
+              <div class="subject-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <h3>اللغة العربية</h3>
+              <p>40 ورقة عمل + 22 اختبار</p>
+            </div>
+
+            <div class="subject-card english">
+              <div class="subject-icon">
+                <i class="fas fa-language"></i>
+              </div>
+              <h3>اللغة الإنجليزية</h3>
+              <p>35 ورقة عمل + 18 اختبار</p>
+            </div>
+
+            <div class="subject-card history">
+              <div class="subject-icon">
+                <i class="fas fa-landmark"></i>
+              </div>
+              <h3>التاريخ</h3>
+              <p>25 ورقة عمل + 10 اختبار</p>
+            </div>
+
+            <div class="subject-card geography">
+              <div class="subject-icon">
+                <i class="fas fa-globe-asia"></i>
+              </div>
+              <h3>الجغرافيا</h3>
+              <p>22 ورقة عمل + 8 اختبار</p>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer animate-footer">
       <div class="footer-content">
         <div class="footer-logo">
-          <img src="/img/logo.png" alt="شعار Royal Store الأبيض" class="logo" />
+          <img src="logo.png" alt="شعار Royal Store الأبيض" class="logo" />
         </div>
 
         <div class="footer-links">
           <a href="index.html">الرئيسية</a>
           <a href="courses.html">الدورات</a>
-          <a href="summaries.html">الملخصات</a>
+          <a href="summaries.html">أوراق العمل</a>
           <a href="store.html">المتجر</a>
         </div>
 
@@ -389,16 +1083,13 @@
       </div>
 
       <div class="copyright">
-        &copy;جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
+        &copy; جميع الحقوق محفوظة لـ زياد حجاج Zyad Haggag
       </div>
     </footer>
-    <div id="loading-screen" class="loading-screen">
-      <div class="spinner">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-      </div>
-      <p>جارٍ الانتقال...</p>
-    </div>
-    <script src="index.js"></script>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- ملف JavaScript -->
     <script src="summaries.js"></script>
   </body>
 </html>

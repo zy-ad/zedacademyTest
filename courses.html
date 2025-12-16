@@ -6,7 +6,7 @@
     <title>اكادمية زد | الدورات</title>
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="courses.css" />
-    <link rel="icon" type="image/png" href="/img/logotop.png" />
+    <link rel="icon" type="image/png" href="logotop.png" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -19,10 +19,19 @@
     />
   </head>
   <body>
+    <!-- شاشة التحميل -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner">
+        <i class="fas fa-spinner fa-spin fa-3x"></i>
+      </div>
+      <p>جارٍ التحميل...</p>
+    </div>
+
+    <!-- شريط التنقل -->
     <header class="navbar">
       <div class="navbar-content">
         <a href="index.html" class="logo-link">
-          <img src="/img/logo.png" alt="شعار Royal Store" class="logo" />
+          <img src="logo.svg" alt="شعار Royal Store" class="logo" />
         </a>
 
         <nav class="nav-links">
@@ -33,14 +42,519 @@
         </nav>
 
         <div class="nav-actions">
-          <div class="user-icon-container" data-tooltip="تسجيل الدخول">
-            <i class="fas fa-user-circle user-icon" id="openLoginModal"></i>
+          <!-- قائمة المستخدم (Dropdown) -->
+          <div class="user-dropdown" id="userDropdown">
+            <!-- الحالة قبل التسجيل -->
+            <div id="guestUser" class="guest-user" style="display: none">
+              <div class="user-icon-container">
+                <i
+                  class="fas fa-user-circle user-icon"
+                  id="openLoginModalBtn"
+                ></i>
+              </div>
+            </div>
+
+            <!-- الحالة بعد التسجيل -->
+            <div id="loggedInUser" class="logged-in-user" style="display: none">
+              <div class="user-profile" id="userProfileBtn">
+                <img
+                  src="11.svg"
+                  alt="صورة المستخدم"
+                  class="user-avatar"
+                  id="currentUserAvatar"
+                />
+                <div class="user-info">
+                  <span class="user-name" id="displayUserName">زياد حجاج</span>
+                  <span class="user-status">نشط الآن</span>
+                </div>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
+              </div>
+
+              <!-- قائمة Dropdown -->
+              <div class="dropdown-menu" id="dropdownMenu">
+                <div class="dropdown-header">
+                  <img
+                    src="11.svg"
+                    alt="صورة المستخدم"
+                    class="dropdown-avatar"
+                    id="dropdownAvatar"
+                  />
+                  <div>
+                    <h4 id="dropdownUserName">زياد حجاج</h4>
+                    <p id="dropdownUserEmail">user@example.com</p>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="profile.html" class="dropdown-item">
+                  <i class="fas fa-user"></i>
+                  <span>الملف الشخصي</span>
+                </a>
+                <a href="#" class="dropdown-item" id="openSettingsModalBtn">
+                  <i class="fas fa-cog"></i>
+                  <span>الإعدادات</span>
+                </a>
+                <a href="purchases.html" class="dropdown-item">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>طلباتي</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a
+                  href="#"
+                  class="dropdown-item logout-item"
+                  onclick="showLogoutConfirm()"
+                >
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>تسجيل الخروج</span>
+                </a>
+              </div>
+            </div>
           </div>
 
-          <a href="store.html" class="cta-button">ابدأ الآن</a>
+          <a href="store.html" class="cta-button" id="ctaButton">ابدأ الآن</a>
         </div>
       </div>
     </header>
+
+    <!-- نافذة تأكيد تسجيل الخروج -->
+    <div id="logoutConfirmModal" class="confirm-modal">
+      <div class="confirm-content">
+        <i
+          class="fas fa-sign-out-alt"
+          style="font-size: 50px; color: #dc3545; margin-bottom: 15px"
+        ></i>
+        <h3 style="margin-bottom: 10px">تأكيد تسجيل الخروج</h3>
+        <p style="color: #666; margin-bottom: 25px">
+          هل أنت متأكد من رغبتك في تسجيل الخروج؟
+        </p>
+        <div class="confirm-buttons">
+          <button class="confirm-btn confirm-yes" onclick="logout()">
+            نعم، سجل خروج
+          </button>
+          <button class="confirm-btn confirm-no" onclick="hideLogoutConfirm()">
+            لا، إلغاء
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال الإعدادات -->
+    <div id="settingsModal" class="modal settings-modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeSettingsModal()">&times;</span>
+        <div class="settings-content">
+          <h3
+            style="
+              text-align: center;
+              color: var(--primary-color);
+              margin-bottom: 30px;
+            "
+          >
+            <i class="fas fa-cog" style="margin-left: 10px"></i>
+            إعدادات الحساب
+          </h3>
+
+          <div class="settings-avatar-section">
+            <div class="avatar-upload-container">
+              <img
+                id="avatarPreview"
+                src="11.svg"
+                alt="صورة الحساب"
+                class="avatar-preview"
+              />
+              <div class="avatar-upload-overlay">
+                <i class="fas fa-camera"></i>
+                <span>تغيير الصورة</span>
+              </div>
+              <input
+                type="file"
+                id="avatarUpload"
+                accept="image/*"
+                style="display: none"
+              />
+            </div>
+
+            <h4 style="margin-bottom: 15px; color: #666">اختر صورتك الشخصية</h4>
+            <div class="avatar-options">
+              <img
+                src="11.svg"
+                alt="صورة 11"
+                class="avatar-option"
+                data-avatar="11.svg"
+              />
+              <img
+                src="22.svg"
+                alt="صورة 22"
+                class="avatar-option"
+                data-avatar="22.svg"
+              />
+              <img
+                src="33.svg"
+                alt="صورة 33"
+                class="avatar-option"
+                data-avatar="33.svg"
+              />
+              <img
+                src="44.svg"
+                alt="صورة 44"
+                class="avatar-option"
+                data-avatar="44.svg"
+              />
+              <img
+                src="55.svg"
+                alt="صورة 55"
+                class="avatar-option"
+                data-avatar="55.svg"
+              />
+              <img
+                src="66.svg"
+                alt="صورة 66"
+                class="avatar-option"
+                data-avatar="66.svg"
+              />
+              <img
+                src="77.svg"
+                alt="صورة 77"
+                class="avatar-option"
+                data-avatar="77.svg"
+              />
+              <img
+                src="88.svg"
+                alt="صورة 88"
+                class="avatar-option"
+                data-avatar="88.svg"
+              />
+            </div>
+          </div>
+
+          <form id="settingsForm">
+            <div class="form-group">
+              <label for="settingsFullName">الاسم الكامل</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  id="settingsFullName"
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsPhone">رقم الجوال</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone-alt input-icon"></i>
+                <input
+                  type="tel"
+                  id="settingsPhone"
+                  required
+                  placeholder="مثال: 0555555555"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsEmail">البريد الإلكتروني</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  id="settingsEmail"
+                  required
+                  placeholder="example@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="settingsPassword">كلمة المرور</label>
+              <div class="input-wrapper">
+                <i class="fas fa-lock input-icon"></i>
+                <input
+                  type="password"
+                  id="settingsPassword"
+                  placeholder="اتركها فارغة إذا لم ترد التغيير"
+                />
+              </div>
+            </div>
+          </form>
+
+          <div class="settings-buttons">
+            <button
+              type="button"
+              class="settings-btn cancel"
+              onclick="closeSettingsModal()"
+            >
+              <i class="fas fa-times" style="margin-left: 8px"></i>
+              إلغاء
+            </button>
+            <button
+              type="button"
+              class="settings-btn save"
+              id="saveSettingsBtn"
+            >
+              <i class="fas fa-save" style="margin-left: 8px"></i>
+              حفظ التغييرات
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال مراجعات المنتج -->
+    <div id="reviewsModal" class="modal reviews-modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeReviewsModal()">&times;</span>
+        <div class="reviews-content">
+          <h3
+            style="
+              text-align: center;
+              color: var(--primary-color);
+              margin-bottom: 20px;
+            "
+          >
+            <i class="fas fa-star" style="margin-left: 10px"></i>
+            مراجعات المنتج
+          </h3>
+          <h4
+            id="reviewsProductTitle"
+            style="text-align: center; margin-bottom: 30px; color: #666"
+          ></h4>
+
+          <!-- قسم كتابة مراجعة جديدة -->
+          <div
+            class="write-review-section"
+            id="writeReviewSection"
+            style="display: none"
+          >
+            <h5><i class="fas fa-edit"></i> اكتب مراجعتك</h5>
+            <div class="rating-input">
+              <span>تقييمك:</span>
+              <div class="stars-input">
+                <i class="far fa-star" data-rating="1"></i>
+                <i class="far fa-star" data-rating="2"></i>
+                <i class="far fa-star" data-rating="3"></i>
+                <i class="far fa-star" data-rating="4"></i>
+                <i class="far fa-star" data-rating="5"></i>
+              </div>
+              <span id="selectedRating">0</span>
+            </div>
+            <div class="form-group">
+              <textarea
+                id="reviewText"
+                placeholder="اكتب مراجعتك هنا..."
+                rows="4"
+              ></textarea>
+            </div>
+            <button class="submit-review-btn" id="submitReviewBtn">
+              <i class="fas fa-paper-plane"></i> نشر المراجعة
+            </button>
+          </div>
+
+          <!-- قائمة المراجعات -->
+          <div class="reviews-list" id="reviewsList">
+            <!-- المراجعات ستظهر هنا ديناميكيًا -->
+          </div>
+
+          <div
+            class="no-reviews"
+            id="noReviewsMessage"
+            style="text-align: center; padding: 30px; color: #888"
+          >
+            <i
+              class="far fa-comment-alt"
+              style="font-size: 40px; margin-bottom: 15px"
+            ></i>
+            <p>لا توجد مراجعات لهذا المنتج بعد. كن أول من يكتب مراجعة!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال التسجيل والتسجيل الدخول -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-body">
+          <div class="modal-image-side">
+            <img src="lolo.gif" alt="صورة تسجيل الدخول" class="login-img" />
+          </div>
+          <div class="modal-form-side">
+            <!-- أزرار التبديل -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px">
+              <button
+                id="showLoginBtn"
+                class="switch-btn active"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  background: #0056b3;
+                  color: white;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                "
+              >
+                تسجيل الدخول
+              </button>
+              <button
+                id="showRegisterBtn"
+                class="switch-btn"
+                style="
+                  flex: 1;
+                  padding: 12px;
+                  background: #f0f0f0;
+                  color: #666;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                "
+              >
+                تسجيل جديد
+              </button>
+            </div>
+
+            <!-- نموذج تسجيل الدخول -->
+            <div id="loginForm" class="tab-content active">
+              <h3>تسجيل الدخول</h3>
+              <form id="loginFormElement">
+                <div class="form-group">
+                  <label for="loginPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="loginPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginPassword"
+                      required
+                      placeholder="أدخل كلمة المرور"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="loginSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="loginSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="loginSubmitBtn"
+                >
+                  <span class="btn-text">تسجيل الدخول</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <!-- نموذج التسجيل الجديد -->
+            <div id="registerForm" class="tab-content" style="display: none">
+              <h3>إنشاء حساب جديد</h3>
+              <form id="registerFormElement">
+                <div class="form-group">
+                  <label for="registerFullName">الاسم الكامل</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input
+                      type="text"
+                      id="registerFullName"
+                      required
+                      placeholder="أدخل اسمك الكامل"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPhone">رقم الجوال</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-phone-alt input-icon"></i>
+                    <input
+                      type="tel"
+                      id="registerPhone"
+                      required
+                      placeholder="مثال: 0555555555"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerEmail">البريد الإلكتروني</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input
+                      type="email"
+                      id="registerEmail"
+                      placeholder="example@email.com"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerPassword">كلمة المرور</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerPassword"
+                      required
+                      placeholder="أدخل كلمة مرور قوية"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="registerSecurityCode">رمز الأمان</label>
+                  <div class="input-wrapper">
+                    <i class="fas fa-shield-alt input-icon"></i>
+                    <input
+                      type="password"
+                      id="registerSecurityCode"
+                      required
+                      placeholder="رمز الأمان السري"
+                    />
+                  </div>
+                  <small style="color: #666; display: block; margin-top: 5px">
+                    رمز الأمان ستحصل عليه من الإدارة
+                  </small>
+                </div>
+                <button
+                  type="submit"
+                  class="login-submit-btn"
+                  id="registerSubmitBtn"
+                >
+                  <span class="btn-text">إنشاء حساب</span>
+                  <span class="btn-spinner" style="display: none">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- إشعارات جانبية -->
+    <div id="notification" class="notification">
+      <i class="fas fa-check-circle"></i>
+      <span class="notification-text"></span>
+    </div>
 
     <main>
       <section class="page-hero courses-hero">
@@ -140,275 +654,190 @@
             </div>
           </div>
 
-          <div class="courses-grid" id="coursesGrid">
-            <div
-              class="course-card"
-              data-category="web programming"
-              data-level="beginner"
-              data-type="paid"
-              data-price="199"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-web-dev.svg"
-                  alt="دورة تطوير الويب للمبتدئين"
-                  class="course-image"
-                />
-                <span class="course-tag paid-tag">مدفوعة</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">
-                  بناء تطبيقات ويب متكاملة (Full Stack)
-                </h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 40 ساعة </span>
-                  <span><i class="far fa-heart"></i> 520 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> أحمد علي</span>
-                </div>
-                <p class="course-description">
-                  تعلم أساسيات تطوير الويب بالكامل من الواجهة الأمامية إلى
-                  الخلفية.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">199 ر.س</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
+          <d[file name]: courses.html (الجزء المحدث فقط للكروت)
+[file content begin]
+<div class="courses-grid" id="coursesGrid">
+  <!-- دورة 1 -->
+  <div class="course-card" data-category="web programming" data-level="beginner" data-type="paid" data-price="199">
+    <div class="course-image-container">
+      <img src="course1.svg" alt="دورة تطوير الويب للمبتدئين" class="course-image" />
+      <span class="course-tag paid-tag">مدفوعة</span>
+      <span class="course-feature-tag">⭐ مميز</span>
+    </div>
+    <div class="card-content">
+      <h3 class="course-title">دورة تطوير الويب الشاملة</h3>
+      <div class="course-meta">
+        <span><i class="fas fa-chalkboard-teacher"></i> د. أحمد العلي</span>
+        <span><i class="far fa-clock"></i> 40 ساعة</span>
+        <span><i class="fas fa-users"></i> 520 طالب</span>
+      </div>
+      <div class="course-features">
+        <span class="feature-badge"><i class="fas fa-video"></i> فيديوهات تعليمية</span>
+        <span class="feature-badge"><i class="fas fa-file-pdf"></i> ملفات PDF</span>
+        <span class="feature-badge"><i class="fas fa-question-circle"></i> اختبارات الكترونية</span>
+        <span class="feature-badge"><i class="fas fa-comments"></i> جلسات تفاعلية</span>
+      </div>
+      <p class="course-description">
+        تعلم تطوير الويب من الصفر حتى الاحتراف. تشمل HTML, CSS, JavaScript و React.
+        شهادة معتمدة في نهاية الدورة.
+      </p>
+      <div class="course-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <span class="rating-text">4.7 (124 تقييم)</span>
+      </div>
+      <div class="course-footer-details">
+        <div class="course-price">
+          <span class="price-main">199 ر.س</span>
+          <span class="price-discount">299 ر.س</span>
+        </div>
+        <button class="explore-btn course-buy-btn" data-course-id="1">
+          <i class="fas fa-shopping-cart"></i> حجز الدورة
+        </button>
+      </div>
+    </div>
+  </div>
 
-            <div
-              class="course-card"
-              data-category="design"
-              data-level="intermediate"
-              data-type="paid"
-              data-price="299"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-ui-ux.svg"
-                  alt="دورة تصميم واجهات المستخدم"
-                  class="course-image"
-                />
-                <span class="course-tag paid-tag">مدفوعة</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">الإتقان في تصميم UI/UX الاحترافي</h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 25 ساعة </span>
-                  <span><i class="far fa-heart"></i> 700 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> سارة خالد</span>
-                </div>
-                <p class="course-description">
-                  تعلم كيفية تصميم تجربة مستخدم ممتازة وواجهات عصرية باستخدام
-                  Figma.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">299 ر.س</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
+  <!-- دورة 2 -->
+  <div class="course-card" data-category="design" data-level="intermediate" data-type="paid" data-price="299">
+    <div class="course-image-container">
+      <img src="course1.svg" alt="دورة تصميم UI/UX" class="course-image" />
+      <span class="course-tag paid-tag">مدفوعة</span>
+      <span class="course-feature-tag">🔥 الأكثر طلباً</span>
+    </div>
+    <div class="card-content">
+      <h3 class="course-title">تصميم واجهات المستخدم UX/UI</h3>
+      <div class="course-meta">
+        <span><i class="fas fa-chalkboard-teacher"></i> أ. سارة الخالد</span>
+        <span><i class="far fa-clock"></i> 35 ساعة</span>
+        <span><i class="fas fa-users"></i> 850 طالب</span>
+      </div>
+      <div class="course-features">
+        <span class="feature-badge"><i class="fas fa-video"></i> 50 فيديو</span>
+        <span class="feature-badge"><i class="fas fa-file-pdf"></i> 12 ملف PDF</span>
+        <span class="feature-badge"><i class="fas fa-question-circle"></i> 8 اختبارات</span>
+        <span class="feature-badge"><i class="fas fa-project-diagram"></i> مشروع نهائي</span>
+      </div>
+      <p class="course-description">
+        احترف تصميم تجربة المستخدم باستخدام Figma و Adobe XD. تعلم إنشاء واجهات جذابة وسهلة الاستخدام.
+      </p>
+      <div class="course-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <span class="rating-text">5.0 (236 تقييم)</span>
+      </div>
+      <div class="course-footer-details">
+        <div class="course-price">
+          <span class="price-main">299 ر.س</span>
+          <span class="price-discount">450 ر.س</span>
+        </div>
+        <button class="explore-btn course-buy-btn" data-course-id="2">
+          <i class="fas fa-shopping-cart"></i> حجز الدورة
+        </button>
+      </div>
+    </div>
+  </div>
 
-            <div
-              class="course-card"
-              data-category="marketing"
-              data-level="beginner"
-              data-type="free"
-              data-price="0"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-seo.svg"
-                  alt="دورة التسويق الرقمي"
-                  class="course-image"
-                />
-                <span class="course-tag free-tag">مجانية</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">
-                  أساسيات التسويق الرقمي والسيو (SEO)
-                </h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 10 ساعات </span>
-                  <span><i class="far fa-heart"></i> 1200 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> فاطمة محمد</span>
-                </div>
-                <p class="course-description">
-                  دورة مجانية لتعلم كيفية تحسين محركات البحث وجذب الزوار لموقعك.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">مجاناً</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
+  <!-- دورة 3 -->
+  <div class="course-card" data-category="marketing" data-level="beginner" data-type="free" data-price="0">
+    <div class="course-image-container">
+      <img src="course1.svg" alt="دورة التسويق الرقمي" class="course-image" />
+      <span class="course-tag free-tag">مجانية</span>
+      <span class="course-feature-tag">🎁 مجاناً</span>
+    </div>
+    <div class="card-content">
+      <h3 class="course-title">أساسيات التسويق الرقمي</h3>
+      <div class="course-meta">
+        <span><i class="fas fa-chalkboard-teacher"></i> د. محمد الشهري</span>
+        <span><i class="far fa-clock"></i> 20 ساعة</span>
+        <span><i class="fas fa-users"></i> 2,100 طالب</span>
+      </div>
+      <div class="course-features">
+        <span class="feature-badge"><i class="fas fa-video"></i> 30 فيديو</span>
+        <span class="feature-badge"><i class="fas fa-file-pdf"></i> 8 ملفات PDF</span>
+        <span class="feature-badge"><i class="fas fa-question-circle"></i> 5 اختبارات</span>
+        <span class="feature-badge"><i class="fas fa-certificate"></i> شهادة مجانية</span>
+      </div>
+      <p class="course-description">
+        تعلم أساسيات التسويق الرقمي، SEO، التسويق عبر وسائل التواصل الاجتماعي، وإدارة الحملات الإعلانية.
+      </p>
+      <div class="course-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>
+        </div>
+        <span class="rating-text">4.3 (567 تقييم)</span>
+      </div>
+      <div class="course-footer-details">
+        <div class="course-price free">
+          <span class="price-main">مجاناً</span>
+        </div>
+        <button class="explore-btn course-buy-btn" data-course-id="3">
+          <i class="fas fa-play-circle"></i> ابدأ التعلم
+        </button>
+      </div>
+    </div>
+  </div>
 
-            <div
-              class="course-card"
-              data-category="programming"
-              data-level="intermediate"
-              data-type="paid"
-              data-price="350"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-python.svg"
-                  alt="دورة بايثون المتقدمة"
-                  class="course-image"
-                />
-                <span class="course-tag paid-tag">مدفوعة</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">بايثون المتقدمة وتحليل البيانات</h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 30 ساعة </span>
-                  <span><i class="far fa-heart"></i> 400 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> يوسف نادر</span>
-                </div>
-                <p class="course-description">
-                  تعلم مفاهيم متقدمة في بايثون وتطبيقها في مجال تحليل البيانات.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">350 ر.س</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
+  <!-- دورة 4 -->
+  <div class="course-card" data-category="programming" data-level="advanced" data-type="paid" data-price="450">
+    <div class="course-image-container">
+      <img src="course1.svg" alt="دورة Python المتقدمة" class="course-image" />
+      <span class="course-tag paid-tag">مدفوعة</span>
+      <span class="course-feature-tag">⚡ جديد</span>
+    </div>
+    <div class="card-content">
+      <h3 class="course-title">Python المتقدمة وتحليل البيانات</h3>
+      <div class="course-meta">
+        <span><i class="fas fa-chalkboard-teacher"></i> د. يوسف الناصر</span>
+        <span><i class="far fa-clock"></i> 55 ساعة</span>
+        <span><i class="fas fa-users"></i> 340 طالب</span>
+      </div>
+      <div class="course-features">
+        <span class="feature-badge"><i class="fas fa-video"></i> 70 فيديو</span>
+        <span class="feature-badge"><i class="fas fa-file-pdf"></i> 15 ملف PDF</span>
+        <span class="feature-badge"><i class="fas fa-question-circle"></i> 12 اختبار</span>
+        <span class="feature-badge"><i class="fas fa-database"></i> مشروع بيانات حقيقي</span>
+      </div>
+      <p class="course-description">
+        احترف برمجة Python المتقدمة، تحليل البيانات باستخدام Pandas و NumPy، وتصور البيانات مع Matplotlib.
+      </p>
+      <div class="course-rating">
+        <div class="stars">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star-half-alt"></i>
+        </div>
+        <span class="rating-text">4.8 (89 تقييم)</span>
+      </div>
+      <div class="course-footer-details">
+        <div class="course-price">
+          <span class="price-main">450 ر.س</span>
+          <span class="price-discount">600 ر.س</span>
+        </div>
+        <button class="explore-btn course-buy-btn" data-course-id="4">
+          <i class="fas fa-shopping-cart"></i> حجز الدورة
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-            <div
-              class="course-card"
-              data-category="web"
-              data-level="advanced"
-              data-type="paid"
-              data-price="450"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-react.svg"
-                  alt="دورة ReactJS"
-                  class="course-image"
-                />
-                <span class="course-tag paid-tag">مدفوعة</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">إتقان ReactJS لبناء تطبيقات ضخمة</h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 55 ساعة </span>
-                  <span><i class="far fa-heart"></i> 950 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> علي حسن</span>
-                </div>
-                <p class="course-description">
-                  دورة شاملة في مكتبة ReactJS وكيفية استخدام الأدوات الحديثة مثل
-                  Redux.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">450 ر.س</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="course-card"
-              data-category="design"
-              data-level="beginner"
-              data-type="free"
-              data-price="0"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-photoshop.svg"
-                  alt="دورة فوتوشوب للمبتدئين"
-                  class="course-image"
-                />
-                <span class="course-tag free-tag">مجانية</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">أساسيات فوتوشوب للمبتدئين</h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 8 ساعات </span>
-                  <span><i class="far fa-heart"></i> 800 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> منى سعيد</span>
-                </div>
-                <p class="course-description">
-                  ابدأ رحلتك في عالم التصميم وتعلم الأساسيات القوية لبرنامج
-                  فوتوشوب.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">مجاناً</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="course-card"
-              data-category="marketing"
-              data-level="advanced"
-              data-type="paid"
-              data-price="399"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-social-media.svg"
-                  alt="إدارة حملات التواصل الاجتماعي"
-                  class="course-image"
-                />
-                <span class="course-tag paid-tag">مدفوعة</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">
-                  إدارة حملات التواصل الاجتماعي الاحترافية
-                </h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 20 ساعة </span>
-                  <span><i class="far fa-heart"></i> 600 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> نادر إبراهيم</span>
-                </div>
-                <p class="course-description">
-                  تعلم بناء وإدارة وتحليل الحملات الإعلانية على مختلف منصات
-                  التواصل.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">399 ر.س</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="course-card"
-              data-category="programming"
-              data-level="intermediate"
-              data-type="free"
-              data-price="0"
-            >
-              <div class="course-image-container">
-                <img
-                  src="/img/course-sql.svg"
-                  alt="دورة قواعد البيانات SQL"
-                  class="course-image"
-                />
-                <span class="course-tag free-tag">مجانية</span>
-              </div>
-              <div class="card-content">
-                <h3 class="course-title">أساسيات قواعد البيانات ولغة SQL</h3>
-                <div class="course-meta">
-                  <span><i class="far fa-clock"></i> 15 ساعة </span>
-                  <span><i class="far fa-heart"></i> 1000 إعجاب </span>
-                  <span><i class="fas fa-user-tie"></i> خالد فهد</span>
-                </div>
-                <p class="course-description">
-                  تعلم كيفية بناء وإدارة قواعد البيانات العلائقية بأساسيات لغة
-                  SQL.
-                </p>
-                <div class="course-footer-details">
-                  <span class="course-price">مجاناً</span>
-                  <a href="#" class="explore-btn">عرض التفاصيل</a>
-                </div>
-              </div>
-            </div>
-          </div>
 
           <div class="no-results-message" id="noResults" style="display: none">
             <i class="fas fa-exclamation-triangle"></i>
@@ -421,10 +850,10 @@
       </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer animate-footer">
       <div class="footer-content">
         <div class="footer-logo">
-          <img src="/img/logo.png" alt="شعار Royal Store الأبيض" class="logo" />
+          <img src="logo.png" alt="شعار Royal Store الأبيض" class="logo" />
         </div>
 
         <div class="footer-links">
@@ -447,47 +876,9 @@
       </div>
     </footer>
 
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <div class="modal-body">
-          <div class="modal-image-side">
-            <img
-              src="/img/lolo.gif"
-              alt="صورة تسجيل الدخول"
-              class="login-img"
-            />
-          </div>
-          <div class="modal-form-side">
-            <h3>تسجيل الدخول / إنشاء حساب</h3>
-            <form>
-              <div class="form-group">
-                <label for="fullName">الاسم الكامل</label>
-                <input type="text" id="fullName" required />
-              </div>
-              <div class="form-group">
-                <label for="phone">رقم الجوال</label>
-                <input type="tel" id="phone" required />
-              </div>
-              <div class="form-group">
-                <label for="securityCode">رمز الأمان</label>
-                <input type="password" id="securityCode" required />
-                <a href="#" class="code-help-link">من أين أجيب رمز الأمان؟</a>
-              </div>
-              <button type="submit" class="login-submit-btn">
-                تسجيل الدخول
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="loading-screen" class="loading-screen">
-      <div class="spinner">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-      </div>
-      <p>جارٍ الانتقال...</p>
-    </div>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- ملف JavaScript -->
     <script src="courses.js"></script>
   </body>
 </html>
